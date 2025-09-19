@@ -65,11 +65,10 @@ const siteLinksList = computed(() => {
 const siteIcon = {
   Blog,
   Cloud,
-  CompactDisc,
-  Compass,
-  Book,
-  Fire,
-  LaptopCode,
+  Link,
+  PanelSeparateWindow20Regular,
+  ConnectionSignal,
+  FlowConnection,
 };
 
 // 链接跳转
