@@ -43,7 +43,7 @@
 <script setup>
 import { Icon } from "@vicons/utils";
 // 可前往 https://www.xicons.org 自行挑选并在此处引入
-import { Link, Blog, CompactDisc, Cloud, Compass, Book, Fire, ConnectionSignal, FlowConnection, LaptopCode } from "@vicons/fa"; // 注意使用正确的类别
+import { Link, Blog, CompactDisc, Cloud, Compass, Book, Fire, CircleNotch, CircleRegular, LaptopCode } from "@vicons/fa"; // 注意使用正确的类别
 import { mainStore } from "@/store";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Pagination, Mousewheel } from "swiper/modules";
@@ -67,8 +67,8 @@ const siteIcon = {
   Cloud,
   Link,
   Book,
-  ConnectionSignal,
-  FlowConnection,
+  CircleNotch,
+  CircleRegular,
 };
 
 // 链接跳转
