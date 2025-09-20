@@ -45,15 +45,15 @@ a:hover {
 
 // 字体文件
 @font-face {
-  font-family: "Pacifico-Regular";
+  font-family: "Pacifico-Regular-all";
   font-display: swap;
-  src: url("https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css") format("truetype");
+  src: url("/font/Pacifico-Regular-all.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "UnidreamLED";
   font-display: swap;
-  src: url("https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css") format("truetype");
+  src: url("/font/UnidreamLED.ttf") format("truetype");
 }
 
 // 基础样式
