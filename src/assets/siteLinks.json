@@ -30,6 +30,11 @@
     "link": "https://statuslive.gw124.top"
   },
   {
+    "icon": "Rocket",
+    "name": "CDN代理链接",
+    "link": "https://cdn.gw124.top"
+  },
+  {
     "icon": "Link",
     "name": "短链接",
     "link": "https://gw126.top/"
