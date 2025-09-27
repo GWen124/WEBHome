@@ -30,10 +30,10 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Checkout web branch
+      - name: Checkout Web branch
         uses: actions/checkout@v4
         with:
-          ref: web
+          ref: Web
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clean web branch (preserve CNAME)
