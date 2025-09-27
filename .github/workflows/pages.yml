@@ -1,0 +1,133 @@
+name: Deploy to Web Branch
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: app/package.json
+
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Build project
+        working-directory: app
+        run: npm run build
+
+      - name: Checkout web branch
+        uses: actions/checkout@v4
+        with:
+          ref: web
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clean web branch (preserve CNAME)
+        run: |
+          # 备份CNAME文件
+          if [ -f CNAME ]; then
+            cp CNAME /tmp/CNAME.backup
+          fi
+          # 清空目录但保留.git和CNAME
+          find . -maxdepth 1 -not -name '.git' -not -name '.' -not -name 'CNAME' -exec rm -rf {} \;
+          # 恢复CNAME文件
+          if [ -f /tmp/CNAME.backup ]; then
+            mv /tmp/CNAME.backup CNAME
+          fi
+
+      - name: Copy build files
+        run: |
+          cp -r app/dist/* .
+          echo "<!-- Generated on $(date) -->" > index.html.tmp
+          cat index.html >> index.html.tmp
+          mv index.html.tmp index.html
+
+      - name: Commit and push to web branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff --staged --quiet || git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')"
+          git push origin web
+
+      - name: Get Current Time
+        id: time
+        run: echo "time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: WebHome v${{ github.run_number }}
+          body: |
+            ## WebHome
+            
+            **发布时间**: ${{ steps.time.outputs.time }}
+            **构建版本**: v${{ github.run_number }}
+            **提交哈希**: ${{ github.sha }}
+            
+            ### 📦 发布内容
+            - ✅ 完整的静态网站文件
+            - ✅ 优化的 Vue.js 应用
+            - ✅ 响应式设计支持
+            - ✅ 移动端适配
+            
+            ### 🎯 功能特性
+            - **头部导航**: 可配置的 Logo 和品牌标识
+            - **首页介绍**: 自定义标题和副标题
+            - **链接模块**: 卡片式布局，支持分页和拖拽
+            - **页脚信息**: 版权信息和社交链接
+            - **图标系统**: 基于 @vicons/fa 的图标库
+            
+            ### 🔧 技术栈
+            - Vue 3 + TypeScript
+            - Vite 构建工具
+            - 响应式 CSS Grid 布局
+            - 触控和鼠标交互支持
+            
+            ### 📱 设备支持
+            - 📱 手机端 (≤480px): 1列布局
+            - 📱 平板端 (≤768px): 2列布局  
+            - 💻 笔记本 (≤1024px): 3列布局
+            - 🖥️ 桌面端 (≤1440px): 4列布局
+            - 🖥️ 大屏 (>1440px): 5列布局
+            
+          draft: false
+          prerelease: false
+
+      - name: Create Release Archive
+        run: |
+          cd app/dist
+          zip -r ../../static-website-v${{ github.run_number }}.zip .
+          cd ../..
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./static-website-v${{ github.run_number }}.zip
+          asset_name: static-website-v${{ github.run_number }}.zip
+          asset_content_type: application/zip
+
+

@@ -1,0 +1,29 @@
+/* ==================== 基础样式 ==================== */
+/* 基础样式重置和通用样式 */
+
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+  overflow: hidden; 
+  min-width: 320px; 
+  /* 禁用鼠标选中 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* 禁用拖拽 */
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+/* 全局禁用选中 - 继承自html,body */
+
+/* 基础容器样式 */
+.container { 
+  padding: 0 24px; 
+}
+
+
