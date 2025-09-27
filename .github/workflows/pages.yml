@@ -63,13 +63,13 @@ jobs:
           cat index.html >> index.html.tmp
           mv index.html.tmp index.html
 
-      - name: Commit and push to web branch
+      - name: Commit and push to Web branch
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
           git diff --staged --quiet || git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')"
-          git push origin web
+          git push origin Web
 
       - name: Get Current Time
         id: time
@@ -123,7 +123,7 @@ jobs:
         run: |
           # 使用临时保存的构建文件创建压缩包
           cd /tmp/build-artifacts
-          zip -r /tmp/static-website-v${{ github.run_number }}.zip .
+          zip -r /tmp/static-Website-v${{ github.run_number }}.zip .
           cd /tmp
           mv static-website-v${{ github.run_number }}.zip ./
 
