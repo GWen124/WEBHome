@@ -51,6 +51,8 @@ jobs:
 
       - name: Copy build files
         run: |
+          # 从 main 分支的构建结果复制文件
+          git checkout main -- dist/
           cp -r dist/* .
           echo "<!-- Generated on $(date) -->" > index.html.tmp
           cat index.html >> index.html.tmp
@@ -114,6 +116,8 @@ jobs:
 
       - name: Create Release Archive
         run: |
+          # 确保 dist 目录存在
+          git checkout main -- dist/
           cd dist
           zip -r ../static-website-v${{ github.run_number }}.zip .
           cd ..
