@@ -30,6 +30,12 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Save build artifacts
+        run: |
+          # 将构建文件保存到临时位置
+          mkdir -p /tmp/build-artifacts
+          cp -r dist/* /tmp/build-artifacts/
+
       - name: Checkout Web branch
         uses: actions/checkout@v4
         with:
@@ -51,9 +57,8 @@ jobs:
 
       - name: Copy build files
         run: |
-          # 从 main 分支的构建结果复制文件
-          git checkout main -- dist/
-          cp -r dist/* .
+          # 从临时位置恢复构建文件
+          cp -r /tmp/build-artifacts/* .
           echo "<!-- Generated on $(date) -->" > index.html.tmp
           cat index.html >> index.html.tmp
           mv index.html.tmp index.html
@@ -116,11 +121,11 @@ jobs:
 
       - name: Create Release Archive
         run: |
-          # 确保 dist 目录存在
-          git checkout main -- dist/
-          cd dist
-          zip -r ../static-website-v${{ github.run_number }}.zip .
-          cd ..
+          # 使用临时保存的构建文件创建压缩包
+          cd /tmp/build-artifacts
+          zip -r /tmp/static-website-v${{ github.run_number }}.zip .
+          cd /tmp
+          mv static-website-v${{ github.run_number }}.zip ./
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
