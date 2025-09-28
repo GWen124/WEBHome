@@ -127,17 +127,8 @@ footer.site-footer a:hover {
 /* 响应式设计 - 最优自适应方案 */
 .grid { gap: 20px; }
 
-/* 大屏 (1440px+) */
-@media (min-width: 1441px) {
-  .site-intro h1 { font-size: 64px; }
-  .site-intro p { font-size: 20px; }
-  .grid .link-card { width: 100%; height: 120px; }
-  .link-card h3 { font-size: 18px; }
-  .link-card p { font-size: 14px; }
-}
-
-/* 桌面 (1025px - 1440px) */
-@media (max-width: 1440px) and (min-width: 1025px) {
+/* 桌面 (1025px+) */
+@media (min-width: 1025px) {
   .site-intro h1 { font-size: 64px; }
   .site-intro p { font-size: 20px; }
   .grid .link-card { width: 100%; height: 120px; }
@@ -338,11 +329,6 @@ footer.site-footer a:hover {
   }
 }
 
-/* 确保Footer在所有情况下都固定在底部 */
-.site-footer {
-  position: sticky !important;
-  bottom: 0 !important;
-  z-index: 1000;
-}
+/* Footer固定底部样式已在上方定义，此处删除重复 */
 
 

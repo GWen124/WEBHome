@@ -132,9 +132,7 @@ jobs:
           path: ./dist/
 
       - name: Copy build files
-        run: |
-          # 复制构建文件到当前目录
-          cp -r dist/* .
+        run: cp -r dist/* .
           
           # 添加构建信息到HTML
           if [ -f index.html ]; then

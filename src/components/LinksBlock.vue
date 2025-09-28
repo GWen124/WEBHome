@@ -363,25 +363,7 @@ onUnmounted(() => {
 .links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .grid { display: grid; gap: 20px; width:100%; }
 .grid .link-card { width: 85%; height: 120px; }
-.links-dots{ display:flex; justify-content:center; gap:10px; margin-top: 15px; margin-bottom: 80px; position: relative; z-index: 10; }
-.links-dots .dot{ 
-  width: 15px; 
-  height: 5px; 
-  border-radius: 2.5px; 
-  background: var(--text-muted); 
-  transition: background .25s ease, width .25s ease, transform .2s ease; 
-  cursor: pointer; 
-}
-.links-dots .dot:hover{ 
-  transform: scale(1.5); 
-}
-.links-dots .dot.active{ 
-  background: var(--text-color); 
-  width: 20px; 
-}
-.links-dots .dot.active:hover{ 
-  transform: scale(1.5); 
-}
+/* 分页点样式 - 与全局样式保持一致 */
 .link-card { 
   background: var(--card-bg); 
   border: 1px solid var(--card-border); 
