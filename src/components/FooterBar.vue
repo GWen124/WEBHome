@@ -1,25 +1,27 @@
 <template>
-  <footer class="site-footer">
+  <footer ref="footerRef" class="site-footer text-selectable-with-cursor">
     <div class="container">
       <span v-if="cfg.FOOTER_SITE">
         © {{ copyrightYear }} 
-        <a :href="cfg.FOOTER_SITE_URL" target="_blank" rel="noopener">{{ cfg.FOOTER_SITE }}</a>
+        <a :href="cfg.FOOTER_SITE_URL" target="_blank" rel="noopener" class="clickable">{{ cfg.FOOTER_SITE }}</a>
       </span>
       <span v-if="cfg.FOOTER_SITE"> · </span>
       <span>
         Powered By 
-        <a href="https://github.com/GWen124/WEBHome" target="_blank" rel="noopener">Wen</a>
+        <a href="https://github.com/GWen124/WEBHome" target="_blank" rel="noopener" class="clickable">Wen</a>
       </span>
     </div>
     <SocialLinks v-if="cfg.FOOTER_SOCIAL_ENABLED" />
   </footer>
-  
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import SocialLinks from './SocialLinks.vue';
 import { SITE_CONFIG as cfg } from '../config';
+
+// 获取footer引用
+const footerRef = ref<HTMLElement>();
 
 // 计算版权年份
 const copyrightYear = computed(() => {
@@ -51,6 +53,7 @@ const copyrightYear = computed(() => {
   // 如果建站年份小于当前年份，显示年份范围
   return `${foundedYear}-${currentYear}`;
 });
+
 
 </script>
 

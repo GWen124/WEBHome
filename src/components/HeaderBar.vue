@@ -61,7 +61,6 @@ const isDropdownOpen = ref(false);
 
 // 主题选项配置
 const themeModes = [
-  { value: 'light', label: '日间模式', icon: Sun },
   { value: 'auto', label: '跟随系统', icon: Desktop },
   { value: 'dark', label: '夜间模式', icon: Moon }
 ];
