@@ -8,7 +8,8 @@
         <strong>{{ headerText }}</strong>
       </div>
       <div class="theme-switcher">
-        <div class="theme-dropdown" @mouseenter="openDropdown" @mouseleave="closeDropdown" @touchstart="handleTouchStart" @touchend="handleTouchEnd">
+        <!-- 桌面端主题切换 -->
+        <div class="theme-dropdown desktop-only" @mouseenter="openDropdown" @mouseleave="closeDropdown">
           <!-- 中心扩散效果 -->
           <div class="theme-menu-container" :class="{ 'expanded': isDropdownOpen }">
             <button
@@ -25,6 +26,19 @@
               </Icon>
             </button>
           </div>
+        </div>
+        
+        <!-- 移动端主题切换 -->
+        <div class="mobile-theme-switcher mobile-only">
+          <button 
+            @click="toggleMobileTheme" 
+            class="mobile-theme-btn"
+            :title="themeTitle"
+          >
+            <Icon size="18">
+              <component :is="themeIcon" />
+            </Icon>
+          </button>
         </div>
       </div>
     </div>
@@ -97,29 +111,12 @@ const closeDropdown = () => {
   }, 50);
 };
 
-// 移动端触摸处理
-const touchStartTime = ref(0);
-const handleTouchStart = (e: TouchEvent) => {
-  e.preventDefault();
-  touchStartTime.value = Date.now();
-  openDropdown();
-};
-
-const handleTouchEnd = (e: TouchEvent) => {
-  e.preventDefault();
-  const touchDuration = Date.now() - touchStartTime.value;
-  
-  // 如果触摸时间很短，立即关闭（避免闪烁）
-  if (touchDuration < 100) {
-    setTimeout(() => {
-      isDropdownOpen.value = false;
-    }, 200);
-  } else {
-    // 长按保持打开状态
-    setTimeout(() => {
-      isDropdownOpen.value = false;
-    }, 1000);
-  }
+// 移动端主题切换
+const toggleMobileTheme = () => {
+  const modes: ThemeMode[] = ['light', 'dark', 'auto'];
+  const currentIndex = modes.indexOf(themeMode.value);
+  const nextIndex = (currentIndex + 1) % modes.length;
+  selectTheme(modes[nextIndex]);
 };
 
 // 选择主题
@@ -371,6 +368,70 @@ onUnmounted(() => {
 
 :global(.dark) .header-content {
   opacity: 1 !important;
+}
+
+/* 移动端专用主题切换 */
+.mobile-theme-switcher {
+  display: none;
+}
+
+.mobile-theme-btn {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  width: 36px;
+  height: 36px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-theme-btn:hover {
+  background: #f9fafb;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.mobile-theme-btn:active {
+  transform: scale(0.95);
+}
+
+:global(.dark) .mobile-theme-btn {
+  background: #1f2937;
+  border-color: #374151;
+  color: #9ca3af;
+}
+
+:global(.dark) .mobile-theme-btn:hover {
+  background: #374151;
+  color: #f3f4f6;
+  border-color: #4b5563;
+}
+
+/* 响应式显示控制 */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .mobile-only {
+    display: block !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-only {
+    display: block !important;
+  }
+  
+  .mobile-only {
+    display: none !important;
+  }
 }
 </style>
 
