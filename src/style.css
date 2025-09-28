@@ -179,6 +179,11 @@ footer.site-footer a:hover {
     padding: 20px 0 15px;
     margin-top: auto;
   }
+  
+  /* 平板竖屏深色模式卡片背景不变色 */
+  .dark .link-card {
+    background: var(--bg-color) !important;
+  }
 }
 
 /* 平板横屏 (481px - 1024px) */
@@ -205,6 +210,11 @@ footer.site-footer a:hover {
   .site-footer {
     padding: 15px 0 10px;
     margin-top: auto;
+  }
+  
+  /* 平板横屏深色模式卡片背景不变色 */
+  .dark .link-card {
+    background: var(--bg-color) !important;
   }
 }
 
@@ -281,6 +291,11 @@ footer.site-footer a:hover {
   /* 减少header下方留白 */
   header.site-header {
     padding: 12px 0;
+  }
+  
+  /* 手机版深色模式卡片背景不变色 */
+  .dark .link-card {
+    background: var(--bg-color) !important;
   }
 }
 
