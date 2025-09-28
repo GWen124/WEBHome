@@ -136,8 +136,13 @@ document.addEventListener('contextmenu', (e) => {
   e.preventDefault();
 });
 
-// 禁用选择文本
+// 禁用选择文本（但允许链接区域选择）
 document.addEventListener('selectstart', (e) => {
+  const target = e.target as HTMLElement;
+  // 如果是链接元素，允许选择
+  if (target.tagName === 'A' || target.closest('a')) {
+    return;
+  }
   e.preventDefault();
 });
 

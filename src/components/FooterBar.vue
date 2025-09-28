@@ -58,6 +58,13 @@ const copyrightYear = computed(() => {
 .site-footer a[href*="gw124.top"],
 .site-footer a[href*="github.com"] {
   font-family: var(--footer-links-font, var(--footer-site-font, var(--global-font))) !important;
+  /* 确保链接可点击 */
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
 /* 页脚版权信息字体 */
@@ -68,6 +75,16 @@ const copyrightYear = computed(() => {
 /* 页脚社交模块字体 */
 .footer-social {
   font-family: var(--footer-social-font, var(--global-font)) !important;
+}
+
+/* 确保所有footer链接都可点击 */
+.site-footer a {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 </style>
 
