@@ -413,10 +413,12 @@ onMounted(async () => {
 .mobile-links-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  padding: 0 20px;
+  gap: 12px;
+  padding: 0 16px;
   min-width: 100%;
   flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mobile-pagination {
@@ -450,18 +452,22 @@ onMounted(async () => {
 .mobile-link-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 20px 16px;
+  border-radius: 12px;
+  padding: 16px 12px;
   text-align: center;
   text-decoration: none;
   color: var(--text-color);
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  min-height: 120px;
+  min-height: 100px;
+  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .mobile-link-card:active {
@@ -470,28 +476,32 @@ onMounted(async () => {
 }
 
 .mobile-link-card .icon {
-  font-size: 28px;
-  margin-bottom: 12px;
+  font-size: 24px;
+  margin-bottom: 8px;
   color: var(--text-color);
+  flex-shrink: 0;
 }
 
 .mobile-link-card h3 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   color: var(--text-color);
   line-height: 1.2;
+  flex-shrink: 0;
 }
 
 .mobile-link-card p {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.2;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
 .mobile-footer {

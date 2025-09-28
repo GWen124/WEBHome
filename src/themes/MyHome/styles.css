@@ -50,7 +50,7 @@ header.site-header strong {
 
 /* 介绍区域样式 */
 .site-intro { 
-  padding: 0; 
+  padding: 60px 0 40px; /* 增加上下内边距 */
   text-align: center; 
   flex: 1; 
   display: flex; 
@@ -77,7 +77,7 @@ header.site-header strong {
 
 /* 链接区域样式 */
 .site-links { 
-  padding: 0; 
+  padding: 40px 0 60px; /* 增加上下内边距 */
   position: relative; 
   z-index: 100; 
   flex: 1; 
@@ -114,8 +114,8 @@ header.site-header strong {
   display: flex; 
   justify-content: center; 
   gap: 10px; 
-  margin-top: 15px; 
-  margin-bottom: 80px; 
+  margin-top: 20px; 
+  margin-bottom: 40px; /* 减少底部间距 */
   position: relative; 
   z-index: 10; 
 }
@@ -182,16 +182,18 @@ header.site-header strong {
 #app { 
   display: flex; 
   flex-direction: column; 
-  height: 100vh; /* 恢复固定高度以保持垂直居中 */
+  min-height: 100vh; /* 使用最小高度而不是固定高度 */
   overflow-x: hidden; 
   overflow-y: auto; /* 允许垂直滚动 */
 }
 
 .site-main { 
-  flex: 1 0 auto; 
+  flex: 1; 
   display: flex; 
   flex-direction: column; 
-  min-height: 0; 
+  justify-content: center; /* 垂直居中主要内容 */
+  align-items: center; /* 水平居中 */
+  padding: 40px 0; /* 增加上下内边距 */
 }
 
 .site-footer { 
@@ -270,6 +272,30 @@ footer.site-footer a:hover {
   line-height: 1; 
   display: inline-flex; 
   align-items: center; 
+}
+
+/* 桌面端优化 */
+@media (min-width: 769px) {
+  /* 确保桌面端内容垂直居中 */
+  .site-main {
+    min-height: calc(100vh - 120px); /* 减去header和footer的高度 */
+    justify-content: center;
+  }
+  
+  /* 桌面端介绍区域优化 */
+  .site-intro {
+    margin-bottom: 20px;
+  }
+  
+  /* 桌面端链接区域优化 */
+  .site-links {
+    margin-top: 20px;
+  }
+  
+  /* 桌面端整体布局优化 */
+  #app {
+    justify-content: space-between;
+  }
 }
 
 /* 响应式设计 */
