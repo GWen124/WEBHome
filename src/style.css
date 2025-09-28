@@ -46,10 +46,6 @@ html, body {
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 }
 
 /* 移动端和平板端允许滚动 */
@@ -58,10 +54,6 @@ html, body {
     overflow: auto;
     height: auto;
     min-height: 100vh;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
   }
 }
 
@@ -108,10 +100,19 @@ footer.site-footer a:visited {
   background-position: center 100%;
   background-size: 0% 2px;
   transition: background-size .3s ease-out;
+  cursor: pointer;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 footer.site-footer a:hover { 
   text-decoration: none; 
   background-size: 100% 2px; 
+  opacity: 0.8;
+}
+footer.site-footer a:active {
+  opacity: 0.6;
 }
 .footer-social { margin-top: 5px; display:flex; justify-content:center; gap:30px; flex-wrap:wrap; color: var(--text-color); }
 .footer-social a { 
@@ -122,13 +123,22 @@ footer.site-footer a:hover {
   background-repeat: no-repeat;
   background-position: center 100%;
   background-size: 0% 2px;
-  transition: background-size .3s ease-out;
+  transition: background-size .3s ease-out, opacity .2s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 .footer-social a:hover { 
   background-size: 100% 2px; 
+  opacity: 0.8;
+}
+.footer-social a:active {
+  opacity: 0.6;
 }
 .footer-social .icon { font-size:16px; line-height:1; display:inline-flex; align-items:center; }
 
