@@ -133,6 +133,8 @@ function startDrag(e: MouseEvent | PointerEvent) {
 let touchStartX = 0;
 let touchStartY = 0;
 let isTouchDragging = false;
+let touchStartTime = 0;
+let lastTouchMoveTime = 0;
 
 function handleTouchStart(e: TouchEvent) {
   const target = e.target as HTMLElement;
@@ -144,26 +146,29 @@ function handleTouchStart(e: TouchEvent) {
   
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
+  touchStartTime = Date.now();
   isTouchDragging = false;
   
   // 不立即阻止默认行为，让系统判断是否为滚动
-  setTimeout(() => {
-    if (isTouchDragging) {
-      e.preventDefault();
-    }
-  }, 10);
 }
 
 function handleTouchMove(e: TouchEvent) {
   if (!e.touches[0]) return;
   
+  const now = Date.now();
   const touchX = e.touches[0].clientX;
   const touchY = e.touches[0].clientY;
   const deltaX = Math.abs(touchX - touchStartX);
   const deltaY = Math.abs(touchY - touchStartY);
   
+  // 节流处理，避免过于频繁的更新
+  if (now - lastTouchMoveTime < 16) { // 60fps
+    return;
+  }
+  lastTouchMoveTime = now;
+  
   // 如果水平移动距离大于垂直移动距离，认为是翻页手势
-  if (deltaX > deltaY && deltaX > 8) {
+  if (deltaX > deltaY && deltaX > 12) {
     isTouchDragging = true;
     e.preventDefault();
     
@@ -172,11 +177,15 @@ function handleTouchMove(e: TouchEvent) {
       startX.value = touchStartX;
     }
     
-    dx.value = touchX - startX.value;
+    // 使用更平滑的移动计算
+    const moveDistance = touchX - startX.value;
+    dx.value = moveDistance * 0.8; // 添加阻尼效果，让滑动更丝滑
   }
 }
 
 function handleTouchEnd(e: TouchEvent) {
+  const touchDuration = Date.now() - touchStartTime;
+  
   // 若未进入拖拽状态，保持点击行为（打开链接）
   if (!isTouchDragging) {
     return;
@@ -186,10 +195,14 @@ function handleTouchEnd(e: TouchEvent) {
   dragging.value = false;
   isTouchDragging = false;
   
-  // 移动端触摸阈值（更灵敏）
-  const threshold = 20;
+  // 根据滑动距离和速度决定是否翻页
+  const moveDistance = Math.abs(dx.value);
+  const moveSpeed = moveDistance / Math.max(touchDuration, 1); // 像素/毫秒
   
-  if (Math.abs(dx.value) > threshold) {
+  // 动态阈值：距离大于30px 或 速度大于0.5px/ms
+  const threshold = moveSpeed > 0.5 ? 15 : 30;
+  
+  if (moveDistance > threshold) {
     if (dx.value < 0 && page.value < totalPages.value - 1) {
       page.value++;
     } else if (dx.value > 0 && page.value > 0) {
@@ -239,9 +252,16 @@ function handleCardClick(e: Event, item: LinkItem) {
     return;
   }
   
-  // 如果正在拖拽，阻止点击
-  if (dragging.value || Math.abs(dx.value) > 5) {
+  // 如果正在拖拽或移动距离较大，阻止点击
+  if (dragging.value || Math.abs(dx.value) > 8) {
     e.preventDefault();
+    return;
+  }
+  
+  // 检查是否为快速点击（短时间内的点击）
+  const clickDuration = Date.now() - touchStartTime;
+  if (clickDuration < 200 && clickDuration > 0) {
+    // 快速点击，允许跳转
     return;
   }
   
@@ -340,7 +360,7 @@ onUnmounted(() => {
 <style scoped>
 .links-viewport { overflow-x: hidden; overflow-y: hidden; width:100%; cursor: grab; user-select: none; padding-bottom: 0px; }
 .links-viewport:active { cursor: grabbing; }
-.links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .35s ease; }
+.links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .grid { display: grid; gap: 20px; width:100%; }
 .grid .link-card { width: 85%; height: 120px; }
 .links-dots{ display:flex; justify-content:center; gap:10px; margin-top: 15px; margin-bottom: 80px; position: relative; z-index: 10; }
