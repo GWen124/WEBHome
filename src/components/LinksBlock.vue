@@ -8,7 +8,7 @@
            @wheel="handleWheel">
                <div class="links-track" :style="{ transform: `translateX(calc(-${page*100}% + ${dx}px))` }">
                  <div class="grid" v-for="(group, gi) in paged" :key="gi" :style="{ gridTemplateColumns: `repeat(${currentColumns}, 1fr)` }">
-           <a v-for="(item, idx) in group" :key="item.name + idx" class="link-card" :href="item.link" target="_blank" rel="noopener" :class="{ 'is-placeholder': !item.name }" @click.prevent="!item.name">
+           <a v-for="(item, idx) in group" :key="item.name + idx" class="link-card" :href="item.link" target="_blank" rel="noopener" :class="{ 'is-placeholder': !item.name }" @click="handleCardClick($event, item)">
           <Icon size="35">
             <component :is="iconMap[item.icon] || Link" />
           </Icon>
@@ -31,7 +31,7 @@ import { Icon } from '@vicons/utils';
 import { Link } from '@vicons/fa';
 import { siteIcon as iconMap } from '../IconMap';
 
-type LinkItem = { icon: string; name: string; description: string; link: string };
+type LinkItem = { icon: string; name: string; description: string; link: string; isPlaceholder?: boolean };
 const links = ref<LinkItem[]>([]);
 const page = ref(0);
 const pageSize = ref(8);
@@ -229,6 +229,24 @@ function endDrag() {
     }
   }
   dx.value = 0;
+}
+
+// 处理卡片点击事件
+function handleCardClick(e: Event, item: LinkItem) {
+  // 如果是占位卡片，阻止点击
+  if (!item.name || item.isPlaceholder) {
+    e.preventDefault();
+    return;
+  }
+  
+  // 如果正在拖拽，阻止点击
+  if (dragging.value || Math.abs(dx.value) > 5) {
+    e.preventDefault();
+    return;
+  }
+  
+  // 允许正常跳转
+  // 不需要 preventDefault()，让浏览器正常处理链接跳转
 }
 
 // 事件处理器
