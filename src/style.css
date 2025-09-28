@@ -156,34 +156,28 @@ footer.site-footer a:hover {
 
 /* 平板竖屏 (481px - 768px) */
 @media (max-width: 768px) and (min-width: 481px) and (orientation: portrait) {
-  /* 容器高度策略：避免多余裁剪，保证最小视口高 */
-  #app { height: auto; min-height: 100vh; overflow: visible; }
-  .site-main { flex: 1 0 auto; }
   .site-intro h1 { font-size: 42px; }
   .site-intro p { font-size: 15px; }
-  .grid .link-card { width: 100%; height: 100px; }
+  .grid .link-card { width: 100%; height: 110px; }
   .link-card h3 { font-size: 16px; }
   .link-card p { font-size: 13px; }
   .links-dots .dot { width: 12px; height: 4px; }
   .links-dots .dot.active { width: 18px; }
-  .links-viewport { padding: 5px 0 0; }
-  .grid { gap: 12px; }
-  .links-dots { margin-top: 6px; margin-bottom: 8px; }
   
   /* 平板竖屏布局优化 */
   .site-intro {
-    padding: 15px 0 5px;
-    margin-top: -250px;
+    padding: 30px 0 20px;
+    margin-top: -200px;
   }
   
   .site-links {
-    padding: 5px 0;
-    margin-top: -350px;
+    padding: 20px 0;
+    margin-top: -300px;
   }
   
   .site-footer {
-    padding: 15px 0 10px;
-    margin-top: auto;
+    padding: 20px 0 15px;
+    margin-top: -50px;
   }
 }
 
