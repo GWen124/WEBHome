@@ -110,11 +110,15 @@ const currentColumns = computed(() => {
 
 // 统一的拖拽处理逻辑
 function startDrag(e: MouseEvent | PointerEvent) {
-  // 如果点击的是卡片链接或分页点，不阻止默认行为
-  if ((e.target as HTMLElement).closest('.link-card') || 
-      (e.target as HTMLElement).closest('.links-dots')) {
-    return;
-  }
+  const target = e.target as HTMLElement;
+  
+  // 检查是否应该阻止拖拽
+  const shouldBlockDrag = target.closest('.link-card') || 
+                         target.closest('.links-dots') ||
+                         target.closest('.site-footer') ||
+                         !target.closest('.links-viewport');
+  
+  if (shouldBlockDrag) return;
   
   e.preventDefault();
   dragging.value = true;
@@ -214,6 +218,13 @@ function handleTouchEnd(e: TouchEvent) {
 
 function handleDrag(e: MouseEvent | PointerEvent) {
   if (!dragging.value) return;
+  
+  const target = e.target as HTMLElement;
+  const shouldBlockDrag = target.closest('.site-footer') || 
+                         !target.closest('.links-viewport');
+  
+  if (shouldBlockDrag) return;
+  
   e.preventDefault();
   dx.value = e.clientX - startX.value;
   
@@ -343,22 +354,16 @@ onMounted(async () => {
   // 添加窗口大小变化监听器
   window.addEventListener('resize', handleResize);
   
-  // 添加全局鼠标事件监听器，确保拖拽在组件外部也能正常工作
-  document.addEventListener('mousemove', handleMouseMove);
-  document.addEventListener('mouseup', handleMouseUp);
-  
 });
 
 onUnmounted(() => {
   // 清理事件监听器
   window.removeEventListener('resize', handleResize);
-  document.removeEventListener('mousemove', handleMouseMove);
-  document.removeEventListener('mouseup', handleMouseUp);
 });
 </script>
 
 <style scoped>
-.links-viewport { overflow-x: hidden; overflow-y: hidden; width:100%; cursor: grab; user-select: none; padding-bottom: 0px; }
+.links-viewport { overflow-x: hidden; overflow-y: hidden; width:100%; cursor: grab; padding-bottom: 0px; }
 .links-viewport:active { cursor: grabbing; }
 .links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .grid { display: grid; gap: 20px; width:100%; }

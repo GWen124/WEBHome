@@ -3,12 +3,12 @@
     <div class="container">
       <span v-if="cfg.FOOTER_SITE">
         © {{ copyrightYear }} 
-        <a :href="cfg.FOOTER_SITE_URL" target="_blank" rel="noopener" @click="handleLinkClick" style="user-select: text !important; pointer-events: auto !important; cursor: pointer !important; color: #007bff !important; text-decoration: underline !important;">{{ cfg.FOOTER_SITE }}</a>
+        <a :href="cfg.FOOTER_SITE_URL" target="_blank" rel="noopener">{{ cfg.FOOTER_SITE }}</a>
       </span>
       <span v-if="cfg.FOOTER_SITE"> · </span>
       <span>
         Powered By 
-        <a href="https://github.com/GWen124/WEBHome" target="_blank" rel="noopener" @click="handleLinkClick" style="user-select: text !important; pointer-events: auto !important; cursor: pointer !important; color: #007bff !important; text-decoration: underline !important;">Wen</a>
+        <a href="https://github.com/GWen124/WEBHome" target="_blank" rel="noopener">Wen</a>
       </span>
     </div>
     <SocialLinks v-if="cfg.FOOTER_SOCIAL_ENABLED" />
@@ -52,25 +52,13 @@ const copyrightYear = computed(() => {
   return `${foundedYear}-${currentYear}`;
 });
 
-// 处理链接点击事件
-function handleLinkClick(event: Event) {
-  console.log('Footer link clicked:', event.target);
-  // 不阻止默认行为，让链接正常跳转
-}
 </script>
 
-<style>
+<style scoped>
 /* 页脚链接文字字体 */
 .site-footer a[href*="gw124.top"],
 .site-footer a[href*="github.com"] {
   font-family: var(--footer-links-font, var(--footer-site-font, var(--global-font))) !important;
-  /* 确保链接可点击 */
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
 }
 
 /* 页脚版权信息字体 */
@@ -81,37 +69,6 @@ function handleLinkClick(event: Event) {
 /* 页脚社交模块字体 */
 .footer-social {
   font-family: var(--footer-social-font, var(--global-font)) !important;
-}
-
-/* 确保所有footer链接都可点击 */
-.site-footer a {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  /* 强制覆盖任何可能的样式 */
-  display: inline !important;
-  position: relative !important;
-  z-index: 999 !important;
-}
-
-/* 特别针对GW124.TOP和Wen链接 */
-.site-footer a[href*="gw124.top"],
-.site-footer a[href*="github.com"] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  display: inline !important;
-  position: relative !important;
-  z-index: 999 !important;
-  /* 添加明显的视觉反馈 */
-  text-decoration: underline !important;
-  color: #007bff !important;
 }
 </style>
 

@@ -24,6 +24,10 @@
   --card-bg: #ffffff;
   --card-border: rgba(0,0,0,0.10);
   --shadow: inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -2px 4px rgba(0,0,0,0.06);
+  --text-select: text !important;
+  --webkit-text-select: text !important;
+  --moz-text-select: text !important;
+  --ms-text-select: text !important;
 }
 
 .dark {
@@ -46,20 +50,6 @@ html, body {
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-
-/* 特别允许footer链接的选择和点击 */
-footer.site-footer a {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
 }
 
 /* 移动端和平板端允许滚动 */
@@ -68,10 +58,6 @@ footer.site-footer a {
     overflow: auto;
     height: auto;
     min-height: 100vh;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
   }
 }
 
@@ -102,7 +88,19 @@ header.site-header strong { font-weight:700; font-size:18px; margin-left:100px; 
 /* Layout */
 #app { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
 .site-main { flex:1 0 auto; display: flex; flex-direction: column; min-height: 0; }
-.site-footer { text-align:center; color: var(--text-muted); padding: 24px 0 5px; margin-top:auto; flex-shrink: 0; position: sticky; bottom: 0; }
+.site-footer { 
+  text-align:center; 
+  color: var(--text-muted); 
+  padding: 24px 0 5px; 
+  margin-top:auto; 
+  flex-shrink: 0; 
+  position: sticky; 
+  bottom: 0; 
+  user-select: var(--text-select);
+  -webkit-user-select: var(--webkit-text-select);
+  -moz-user-select: var(--moz-text-select);
+  -ms-user-select: var(--ms-text-select);
+}
 /* 仅缩小 Footer 文字信息区域字号，不影响社交模块 */
 .site-footer > .container { font-size:15px; }
 footer.site-footer::before{ content:""; display:block; width:70%; height:1px; margin:0 auto 8px; background:linear-gradient(90deg,rgba(0,0,0,0) 0%, var(--border-color) 12%, var(--border-color) 88%, rgba(0,0,0,0) 100%);} 
@@ -118,13 +116,10 @@ footer.site-footer a:visited {
   background-position: center 100%;
   background-size: 0% 2px;
   transition: background-size .3s ease-out;
-  /* 允许点击和选中 */
-  user-select: text;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  pointer-events: auto;
-  cursor: pointer;
+  user-select: var(--text-select);
+  -webkit-user-select: var(--webkit-text-select);
+  -moz-user-select: var(--moz-text-select);
+  -ms-user-select: var(--ms-text-select);
 }
 footer.site-footer a:hover { 
   text-decoration: none; 
@@ -143,13 +138,10 @@ footer.site-footer a:hover {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  /* 允许点击和选中 */
-  user-select: text;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  pointer-events: auto;
-  cursor: pointer;
+  user-select: var(--text-select);
+  -webkit-user-select: var(--webkit-text-select);
+  -moz-user-select: var(--moz-text-select);
+  -ms-user-select: var(--ms-text-select);
 }
 .footer-social a:hover { 
   background-size: 100% 2px; 

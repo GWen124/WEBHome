@@ -13,8 +13,8 @@ if (SITE_CONFIG.GLOBAL_FONT && SITE_CONFIG.GLOBAL_FONT.trim() !== '') {
   loadCustomFont(SITE_CONFIG.GLOBAL_FONT);
 }
 
-// 加载专用字体
-const specificFonts = [
+// 字体配置
+const FONT_CONFIGS = [
   { name: SITE_CONFIG.HEADER_FONT, target: 'header' },
   { name: SITE_CONFIG.INTRO_TITLE_FONT, target: 'intro-title' },
   { name: SITE_CONFIG.INTRO_SUBTITLE_FONT, target: 'intro-subtitle' },
@@ -24,12 +24,11 @@ const specificFonts = [
   { name: SITE_CONFIG.FOOTER_SOCIAL_FONT, target: 'footer-social' }
 ];
 
-specificFonts.forEach(({ name, target }) => {
+// 加载专用字体
+FONT_CONFIGS.forEach(({ name, target }) => {
   if (name && name.trim() !== '') {
-    // 有专用字体，加载专用字体
     loadSpecificFont(name, target);
   } else {
-    // 没有专用字体，使用全局字体
     setSpecificFontToGlobal(target);
   }
 });
@@ -60,19 +59,8 @@ function loadCustomFont(fontName: string) {
 
 // 更新所有专用字体为全局字体
 function updateSpecificFontsToGlobal() {
-  const specificFonts = [
-    { name: SITE_CONFIG.HEADER_FONT, target: 'header' },
-    { name: SITE_CONFIG.INTRO_TITLE_FONT, target: 'intro-title' },
-    { name: SITE_CONFIG.INTRO_SUBTITLE_FONT, target: 'intro-subtitle' },
-    { name: SITE_CONFIG.FOOTER_SITE_FONT, target: 'footer-site' },
-    { name: SITE_CONFIG.FOOTER_LINKS_FONT, target: 'footer-links' },
-    { name: SITE_CONFIG.FOOTER_COPYRIGHT_FONT, target: 'footer-copyright' },
-    { name: SITE_CONFIG.FOOTER_SOCIAL_FONT, target: 'footer-social' }
-  ];
-
-  specificFonts.forEach(({ name, target }) => {
+  FONT_CONFIGS.forEach(({ name, target }) => {
     if (!name || name.trim() === '') {
-      // 没有专用字体，使用智能回退机制
       setSpecificFontToGlobal(target);
     }
   });
@@ -131,50 +119,8 @@ function setSpecificFontToGlobal(target: string) {
   }
 }
 
-// 禁用右键菜单和选中
-document.addEventListener('contextmenu', (e) => {
-  e.preventDefault();
-});
-
-// 禁用选择文本（但允许链接区域选择）
-document.addEventListener('selectstart', (e) => {
-  const target = e.target as HTMLElement;
-  // 如果是链接元素，允许选择
-  if (target.tagName === 'A' || target.closest('a')) {
-    return;
-  }
-  e.preventDefault();
-});
-
-// 禁用拖拽
-document.addEventListener('dragstart', (e) => {
-  e.preventDefault();
-});
-
-// 禁用F12、Ctrl+Shift+I等开发者工具快捷键
-document.addEventListener('keydown', (e) => {
-  // 禁用F12
-  if (e.key === 'F12') {
-    e.preventDefault();
-  }
-  // 禁用Ctrl+Shift+I (开发者工具)
-  if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-    e.preventDefault();
-  }
-  // 禁用Ctrl+Shift+J (控制台)
-  if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-    e.preventDefault();
-  }
-  // 禁用Ctrl+U (查看源代码)
-  if (e.ctrlKey && e.key === 'u') {
-    e.preventDefault();
-  }
-  // 禁用Ctrl+S (保存页面)
-  if (e.ctrlKey && e.key === 's') {
-    e.preventDefault();
-  }
-});
 
 createApp(App).mount('#app');
+
 
 
