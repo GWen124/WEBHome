@@ -61,6 +61,7 @@ const isDropdownOpen = ref(false);
 
 // 主题选项配置
 const themeModes = [
+  { value: 'light', label: '日间模式', icon: Sun },
   { value: 'auto', label: '跟随系统', icon: Desktop },
   { value: 'dark', label: '夜间模式', icon: Moon }
 ];
@@ -136,7 +137,9 @@ const applyTheme = () => {
   
   if (themeMode.value === 'auto') {
     // 跟随系统
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    console.log('跟随系统模式，系统是否为深色:', isDark);
+    if (isDark) {
       root.classList.add('dark');
       root.classList.remove('light');
     } else {
@@ -156,6 +159,7 @@ const applyTheme = () => {
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const handleSystemThemeChange = () => {
   if (themeMode.value === 'auto') {
+    console.log('系统主题变化，当前主题模式:', themeMode.value);
     applyTheme();
   }
 };
@@ -425,7 +429,7 @@ onUnmounted(() => {
 
 @media (min-width: 769px) {
   .desktop-only {
-    display: block !important;
+    display: flex !important;
   }
   
   .mobile-only {
