@@ -68,7 +68,7 @@ header.site-header .container { display:flex; align-items:center; }
 header.site-header strong { font-weight:700; font-size:18px; margin-left:100px; }
 
 /* Intro */
-.site-intro { padding:0; text-align:center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 0; }
+.site-intro { padding:20px 0; text-align:center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 0; }
 .site-intro h1 { font-size:64px; font-weight:800; margin:0 0 12px; color: var(--text-color); }
 .site-intro p { font-size:20px; color: var(--text-muted); margin:0; }
 
@@ -166,8 +166,8 @@ footer.site-footer a:hover {
   
   /* 平板竖屏布局优化 */
   .site-intro {
-    padding: 15px 0 10px;
-    margin-top: -100px;
+    padding: 10px 0 8px;
+    margin-top: -50px;
   }
   
   .site-links {
@@ -193,8 +193,8 @@ footer.site-footer a:hover {
   
   /* 平板横屏布局优化 */
   .site-intro {
-    padding: 20px 0 15px;
-    margin-top: -100px;
+    padding: 12px 0 10px;
+    margin-top: -50px;
   }
   
   .site-links {
@@ -223,8 +223,8 @@ footer.site-footer a:hover {
   
   /* 进一步减少手机端留白 */
   .site-intro {
-    padding: 10px 0 5px;
-    margin-top: -200px;
+    padding: 8px 0 5px;
+    margin-top: -150px;
   }
   
   .site-links {
