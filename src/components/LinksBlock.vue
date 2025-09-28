@@ -40,10 +40,20 @@ const dragging = ref(false);
 const startX = ref(0);
 const viewport = ref<HTMLElement | null>(null);
 
-// 固定每页卡片数量 - 3列2行显示方案
+// 响应式每页卡片数量
 const updatePageSize = () => {
-  // 固定每页卡片数 = 3列 × 2行 = 6个卡片
-  pageSize.value = 6;
+  const width = window.innerWidth;
+  
+  if (width <= 480) {
+    // 手机端：1列4行 = 4个卡片
+    pageSize.value = 4;
+  } else if (width <= 768) {
+    // 平板端：2列2行 = 4个卡片
+    pageSize.value = 4;
+  } else {
+    // 桌面端：3列2行 = 6个卡片
+    pageSize.value = 6;
+  }
   
   // 如果当前页超出范围，重置到第一页
   if (page.value >= totalPages.value) {
@@ -60,9 +70,17 @@ const paged = computed(() => {
 });
 const totalPages = computed(()=> paged.value.length);
 
-// 固定列数 - 始终显示3列
+// 响应式列数计算
 const currentColumns = computed(() => {
-  return 3; // 固定3列显示
+  const width = window.innerWidth;
+  
+  if (width <= 480) {
+    return 1; // 手机端：1列
+  } else if (width <= 768) {
+    return 2; // 平板端：2列
+  } else {
+    return 3; // 桌面端：3列
+  }
 });
 
   // 简化的翻页函数
@@ -251,7 +269,10 @@ function handleWheel(e: WheelEvent) {
   }
 }
 
-// 窗口大小变化处理函数（已移除，因为使用固定3列布局）
+// 窗口大小变化处理函数
+const handleResize = () => {
+  updatePageSize();
+};
 
 onMounted(async () => {
   const res = await fetch('/assets/siteLinks.json');
@@ -259,6 +280,9 @@ onMounted(async () => {
   
   // 初始化页面大小
   updatePageSize();
+  
+  // 添加窗口大小变化监听器
+  window.addEventListener('resize', handleResize);
   
   // 添加全局鼠标事件监听器，确保拖拽在组件外部也能正常工作
   document.addEventListener('mousemove', handleMouseMove);
@@ -268,6 +292,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   // 清理事件监听器
+  window.removeEventListener('resize', handleResize);
   document.removeEventListener('mousemove', handleMouseMove);
   document.removeEventListener('mouseup', handleMouseUp);
 });
@@ -329,15 +354,15 @@ onUnmounted(() => {
   color: var(--text-muted); 
   font-size: 14px; 
 }
-/* 固定3列布局 */
+/* 默认桌面端布局 - 3列 */
 .grid { 
   grid-template-columns: repeat(3, 1fr); 
   justify-items: center;
   align-items: center;
 }
 
-/* 移动端优化 */
-@media (max-width: 768px) {
+/* 平板端布局 - 2列2行 */
+@media (max-width: 768px) and (min-width: 481px) {
   .links-viewport {
     touch-action: pan-x pan-y;
     -webkit-overflow-scrolling: touch;
@@ -345,33 +370,83 @@ onUnmounted(() => {
   }
   
   .grid {
-    gap: 12px !important;
-    padding: 0 8px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    padding: 0 12px;
   }
   
   .link-card {
     width: 100% !important;
-    min-height: 90px;
-    padding: 12px 8px;
+    min-height: 100px;
+    padding: 16px 12px;
     margin: 0;
     box-sizing: border-box;
   }
   
   .link-card h3 {
-    font-size: 13px !important;
-    margin: 4px 0 2px !important;
+    font-size: 15px !important;
+    margin: 6px 0 4px !important;
     line-height: 1.2;
   }
   
   .link-card p {
-    font-size: 10px !important;
+    font-size: 12px !important;
     line-height: 1.3;
     margin: 0;
   }
   
   .links-dots {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .links-dots .dot {
+    width: 10px !important;
+    height: 4px !important;
+  }
+  
+  .links-dots .dot.active {
+    width: 16px !important;
+  }
+}
+
+/* 手机端布局 - 1列4行 */
+@media (max-width: 480px) {
+  .links-viewport {
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 0;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    padding: 0 16px;
+  }
+  
+  .link-card {
+    width: 100% !important;
+    min-height: 80px;
+    padding: 14px 16px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .link-card h3 {
+    font-size: 14px !important;
+    margin: 6px 0 4px !important;
+    line-height: 1.2;
+  }
+  
+  .link-card p {
+    font-size: 11px !important;
+    line-height: 1.3;
+    margin: 0;
+  }
+  
+  .links-dots {
+    margin-top: 16px;
+    margin-bottom: 16px;
   }
   
   .links-dots .dot {
