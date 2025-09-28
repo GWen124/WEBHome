@@ -8,7 +8,7 @@
            @wheel="handleWheel">
                <div class="links-track" :style="{ transform: `translateX(calc(-${page*100}% + ${dx}px))` }">
                  <div class="grid" v-for="(group, gi) in paged" :key="gi" :style="{ gridTemplateColumns: `repeat(${currentColumns}, 1fr)` }">
-            <a v-for="item in group" :key="item.name" class="link-card" :href="item.link" target="_blank" rel="noopener">
+           <a v-for="(item, idx) in group" :key="item.name + idx" class="link-card" :href="item.link" target="_blank" rel="noopener" :class="{ 'is-placeholder': !item.name }" @click.prevent="!item.name">
           <Icon size="35">
             <component :is="iconMap[item.icon] || Link" />
           </Icon>
@@ -63,8 +63,16 @@ const updatePageSize = () => {
 
 const paged = computed(() => {
   const res: LinkItem[][] = [];
-  for(let i=0;i<links.value.length;i+=pageSize.value){
-    res.push(links.value.slice(i, i+pageSize.value));
+  for (let i = 0; i < links.value.length; i += pageSize.value) {
+    res.push(links.value.slice(i, i + pageSize.value));
+  }
+  // 统一每页卡片数量，最后一页用占位补齐，保证网格高度一致
+  const last = res[res.length - 1];
+  if (last && last.length < pageSize.value) {
+    const placeholders: LinkItem[] = Array(pageSize.value - last.length)
+      .fill(null)
+      .map(() => ({ icon: '', name: '', description: '', link: 'javascript:void(0)' }));
+    res[res.length - 1] = last.concat(placeholders);
   }
   return res.length ? res : [[]];
 });
@@ -120,8 +128,8 @@ let isTouchDragging = false;
 function handleTouchStart(e: TouchEvent) {
   const target = e.target as HTMLElement;
   
-  // 如果点击的是卡片链接或分页点，不阻止默认行为
-  if (target.closest('.link-card') || target.closest('.links-dots')) {
+  // 点击分页点时不触发拖拽
+  if (target.closest('.links-dots')) {
     return;
   }
   
@@ -146,7 +154,7 @@ function handleTouchMove(e: TouchEvent) {
   const deltaY = Math.abs(touchY - touchStartY);
   
   // 如果水平移动距离大于垂直移动距离，认为是翻页手势
-  if (deltaX > deltaY && deltaX > 10) {
+  if (deltaX > deltaY && deltaX > 8) {
     isTouchDragging = true;
     e.preventDefault();
     
@@ -160,13 +168,17 @@ function handleTouchMove(e: TouchEvent) {
 }
 
 function handleTouchEnd(e: TouchEvent) {
-  if (!isTouchDragging || !dragging.value) return;
+  // 若未进入拖拽状态，保持点击行为（打开链接）
+  if (!isTouchDragging) {
+    return;
+  }
   
+  if (!dragging.value) return;
   dragging.value = false;
   isTouchDragging = false;
   
-  // 移动端触摸阈值
-  const threshold = 30;
+  // 移动端触摸阈值（更灵敏）
+  const threshold = 20;
   
   if (Math.abs(dx.value) > threshold) {
     if (dx.value < 0 && page.value < totalPages.value - 1) {
@@ -339,6 +351,7 @@ onUnmounted(() => {
   transition: border-color .2s ease, background-color .2s ease; 
   cursor: pointer; 
 }
+.link-card.is-placeholder { visibility: hidden; pointer-events: none; }
 .link-card:hover { 
   border-color: var(--text-muted); 
   background: var(--bg-color); 
