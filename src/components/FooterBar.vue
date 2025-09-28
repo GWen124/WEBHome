@@ -1,5 +1,5 @@
 <template>
-  <footer ref="footerRef" class="site-footer text-selectable-with-cursor">
+  <footer ref="footerRef" class="site-footer">
     <div class="container">
       <span v-if="cfg.FOOTER_SITE">
         © {{ copyrightYear }} 

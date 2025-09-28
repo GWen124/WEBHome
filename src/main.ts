@@ -122,6 +122,68 @@ function setSpecificFontToGlobal(target: string) {
 
 createApp(App).mount('#app');
 
+// 全局禁用右键菜单和文本选择
+document.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  return false;
+});
+
+// 禁用拖拽
+document.addEventListener('dragstart', (e) => {
+  e.preventDefault();
+  return false;
+});
+
+// 禁用选择文本
+document.addEventListener('selectstart', (e) => {
+  e.preventDefault();
+  return false;
+});
+
+// 禁用复制粘贴快捷键
+document.addEventListener('keydown', (e) => {
+  // 禁用 Ctrl+A (全选)
+  if (e.ctrlKey && e.key === 'a') {
+    e.preventDefault();
+    return false;
+  }
+  // 禁用 Ctrl+C (复制)
+  if (e.ctrlKey && e.key === 'c') {
+    e.preventDefault();
+    return false;
+  }
+  // 禁用 Ctrl+V (粘贴)
+  if (e.ctrlKey && e.key === 'v') {
+    e.preventDefault();
+    return false;
+  }
+  // 禁用 Ctrl+X (剪切)
+  if (e.ctrlKey && e.key === 'x') {
+    e.preventDefault();
+    return false;
+  }
+  // 禁用 F12 (开发者工具)
+  if (e.key === 'F12') {
+    e.preventDefault();
+    return false;
+  }
+  // 禁用 Ctrl+Shift+I (开发者工具)
+  if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+    e.preventDefault();
+    return false;
+  }
+  // 禁用 Ctrl+Shift+J (控制台)
+  if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+    e.preventDefault();
+    return false;
+  }
+  // 禁用 Ctrl+U (查看源代码)
+  if (e.ctrlKey && e.key === 'u') {
+    e.preventDefault();
+    return false;
+  }
+});
+
 
 
 
