@@ -200,10 +200,8 @@ jobs:
           # 如果没有获取到提交信息，使用默认信息
           if [ -z "$COMMITS" ]; then
             COMMITS="- 构建版本: v${{ github.run_number }}"
-            COMMITS="$COMMITS
-- 构建时间: $(date '+%Y-%m-%d %H:%M:%S UTC')"
-            COMMITS="$COMMITS
-- 提交哈希: ${{ github.sha }}"
+            COMMITS="$COMMITS"$'\n'"- 构建时间: $(date '+%Y-%m-%d %H:%M:%S UTC')"
+            COMMITS="$COMMITS"$'\n'"- 提交哈希: ${{ github.sha }}"
           fi
           
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
