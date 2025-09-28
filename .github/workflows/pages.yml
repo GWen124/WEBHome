@@ -188,8 +188,22 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          # 获取最近的提交信息
-          COMMITS=$(git log --oneline -10 --pretty=format:"- %s (%h)" ${{ github.sha }}^..${{ github.sha }})
+          # 获取最近的提交信息，使用更安全的方式
+          if git rev-parse --verify ${{ github.sha }} >/dev/null 2>&1; then
+            # 如果当前提交存在，获取最近的提交
+            COMMITS=$(git log --oneline -10 --pretty=format:"- %s (%h)" HEAD~10..HEAD 2>/dev/null || git log --oneline -10 --pretty=format:"- %s (%h)" 2>/dev/null)
+          else
+            # 如果提交不存在，使用HEAD
+            COMMITS=$(git log --oneline -10 --pretty=format:"- %s (%h)" 2>/dev/null || echo "- 无法获取提交历史")
+          fi
+          
+          # 如果没有获取到提交信息，使用默认信息
+          if [ -z "$COMMITS" ]; then
+            COMMITS="- 构建版本: v${{ github.run_number }}
+- 构建时间: $(date '+%Y-%m-%d %H:%M:%S UTC')
+- 提交哈希: ${{ github.sha }}"
+          fi
+          
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           echo "$COMMITS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
