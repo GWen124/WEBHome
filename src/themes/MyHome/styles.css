@@ -276,20 +276,22 @@ footer.site-footer a:hover {
 /* 手机端优化 */
 @media (max-width: 768px) {
   .container {
-    padding: 0 16px; /* 减少手机端内边距 */
+    padding: 0 20px; /* 增加手机端内边距，提供更好的视觉空间 */
   }
   
   .site-intro h1 {
-    font-size: 48px; /* 手机端减小标题字体 */
-    margin: 0 0 8px; /* 减少标题底部间距 */
+    font-size: 42px; /* 进一步减小手机端标题字体 */
+    margin: 0 0 12px; /* 增加标题底部间距 */
+    line-height: 1.1; /* 优化行高 */
   }
   
   .site-intro p {
-    font-size: 18px; /* 手机端减小副标题字体 */
+    font-size: 16px; /* 减小手机端副标题字体 */
+    line-height: 1.4; /* 优化行高 */
   }
   
   .site-links {
-    padding: 20px 0 10px; /* 增加手机端链接区域内边距，减少底部间距 */
+    padding: 30px 0 20px; /* 增加手机端链接区域内边距 */
     justify-content: flex-start; /* 手机端改为顶部对齐 */
   }
   
@@ -298,46 +300,102 @@ footer.site-footer a:hover {
   }
   
   .link-card {
-    width: 90%; /* 手机端卡片稍微宽一些 */
-    height: 100px; /* 手机端卡片高度减小 */
-    padding: 16px 12px; /* 减少手机端卡片内边距 */
+    width: 85%; /* 手机端卡片宽度 */
+    height: 110px; /* 增加手机端卡片高度 */
+    padding: 20px 16px; /* 增加手机端卡片内边距 */
+    margin: 0 auto; /* 确保卡片居中 */
   }
   
   .link-card h3 {
-    font-size: 16px; /* 手机端卡片标题字体 */
-    margin: 6px 0 4px;
+    font-size: 17px; /* 增加手机端卡片标题字体 */
+    margin: 8px 0 6px; /* 增加标题间距 */
+    line-height: 1.2; /* 优化行高 */
   }
   
   .link-card p {
-    font-size: 13px; /* 手机端卡片描述字体 */
+    font-size: 14px; /* 增加手机端卡片描述字体 */
+    line-height: 1.3; /* 优化行高 */
   }
   
   .links-dots {
-    margin-top: 20px;
-    margin-bottom: 20px; /* 进一步减少手机端底部间距 */
+    margin-top: 25px;
+    margin-bottom: 30px; /* 增加手机端底部间距 */
   }
   
   .links-dots .dot {
-    width: 12px;
-    height: 4px;
+    width: 14px; /* 增加点的大小 */
+    height: 5px; /* 增加点的高度 */
+    margin: 0 6px; /* 增加点之间的间距 */
   }
   
   .links-dots .dot.active {
-    width: 16px;
+    width: 18px; /* 增加激活点的大小 */
   }
   
   /* 手机端footer位置优化 */
   .site-footer {
-    padding: 16px 0 12px; /* 减少手机端footer内边距 */
+    padding: 20px 0 16px; /* 增加手机端footer内边距 */
   }
   
   .footer-social {
-    margin-top: 10px; /* 减少社交模块上边距 */
-    gap: 20px; /* 减少社交链接间距 */
+    margin-top: 12px; /* 增加社交模块上边距 */
+    gap: 24px; /* 增加社交链接间距 */
   }
   
   .footer-social a {
-    font-size: 14px; /* 稍微减小社交链接字体 */
+    font-size: 15px; /* 增加社交链接字体 */
+    padding: 8px 4px; /* 增加触摸区域 */
+  }
+  
+  /* 手机端整体布局优化 */
+  #app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .site-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: calc(100vh - 120px); /* 减去header和footer的高度 */
+  }
+  
+  /* 手机端卡片网格优化 */
+  .grid {
+    gap: 15px; /* 增加卡片之间的间距 */
+    padding: 0 10px; /* 增加网格内边距 */
+  }
+  
+  /* 手机端头部优化 */
+  header.site-header {
+    padding: 20px 0; /* 增加头部内边距 */
+  }
+  
+  header.site-header strong {
+    font-size: 20px; /* 增加头部字体大小 */
+  }
+  
+  /* 手机端链接卡片悬停效果优化 */
+  .link-card:hover {
+    transform: translateY(-4px); /* 减少悬停移动距离 */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* 增强悬停阴影 */
+  }
+  
+  /* 手机端滚动优化 */
+  .links-viewport {
+    -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
+    scroll-behavior: smooth; /* 平滑滚动 */
+  }
+  
+  /* 手机端分页点优化 */
+  .links-dots .dot:hover {
+    transform: scale(1.3); /* 增加悬停缩放 */
+  }
+  
+  .links-dots .dot.active:hover {
+    transform: scale(1.3); /* 激活状态悬停缩放 */
   }
 }
 

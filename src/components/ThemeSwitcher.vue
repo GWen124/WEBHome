@@ -253,26 +253,27 @@ onUnmounted(() => {
 /* 手机端优化 */
 @media (max-width: 768px) {
   .theme-switcher {
-    height: 40px; /* 增大触摸区域 */
+    height: 44px; /* 进一步增大触摸区域 */
   }
   
   .theme-dropdown {
-    height: 40px;
-    min-width: 40px; /* 确保有足够的触摸区域 */
+    height: 44px;
+    min-width: 44px; /* 确保有足够的触摸区域 */
   }
   
   .theme-menu-container {
-    width: 40px;
+    width: 44px;
   }
   
   .theme-menu-container.expanded {
-    width: 140px; /* 手机端稍微宽一些 */
+    width: 150px; /* 手机端稍微宽一些 */
   }
   
   .theme-menu-item {
-    width: 40px;
-    height: 40px;
-    padding: 10px; /* 增大内边距 */
+    width: 44px;
+    height: 44px;
+    padding: 12px; /* 增大内边距 */
+    border-radius: 10px; /* 增加圆角 */
   }
   
   /* 手机端按钮位置调整 */
@@ -283,18 +284,31 @@ onUnmounted(() => {
   
   .theme-menu-container.expanded .theme-menu-item:nth-child(2) {
     left: 50%;
-    margin-left: -20px;
+    margin-left: -22px;
   }
   
   .theme-menu-container.expanded .theme-menu-item:nth-child(3) {
     left: 100%;
-    margin-left: -40px;
+    margin-left: -44px;
   }
   
   /* 确保按钮在手机端有足够的触摸反馈 */
   .theme-menu-item:active {
-    transform: scale(0.95);
-    background: var(--bg-color);
+    transform: scale(0.92);
+    background: var(--card-bg);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* 手机端主题切换按钮优化 */
+  .theme-menu-item.is-active {
+    background: var(--card-bg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  
+  /* 手机端悬停效果 */
+  .theme-menu-item:hover {
+    background: var(--card-bg);
+    transform: scale(1.05);
   }
 }
 </style>

@@ -343,35 +343,58 @@ onUnmounted(() => {
   .links-viewport {
     touch-action: pan-x; /* 只允许水平滑动 */
     -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
+    padding: 15px 0; /* 增加上下内边距 */
   }
   
   .link-card {
     touch-action: manipulation; /* 优化触摸响应 */
     -webkit-tap-highlight-color: transparent; /* 移除点击高亮 */
     pointer-events: auto; /* 确保卡片可以接收点击事件 */
+    min-height: 110px; /* 确保最小高度 */
+    transition: all 0.2s ease; /* 添加过渡动画 */
+  }
+  
+  .link-card:active {
+    transform: scale(0.98); /* 添加点击反馈 */
+  }
+  
+  .links-dots {
+    margin-top: 20px;
+    margin-bottom: 25px; /* 增加底部间距 */
   }
   
   .links-dots .dot {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    min-width: 20px; /* 增大触摸区域 */
-    min-height: 20px;
+    min-width: 24px; /* 增大触摸区域 */
+    min-height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 4px; /* 增加点之间的间距 */
   }
   
   .links-dots .dot::before {
     content: '';
-    width: 12px;
-    height: 4px;
-    border-radius: 2px;
+    width: 14px;
+    height: 5px;
+    border-radius: 2.5px;
     background: inherit;
     transition: all 0.25s ease;
   }
   
   .links-dots .dot.active::before {
-    width: 16px;
+    width: 18px;
+  }
+  
+  .links-dots .dot:active {
+    transform: scale(1.2); /* 添加点击反馈 */
+  }
+  
+  /* 手机端网格布局优化 */
+  .grid {
+    gap: 20px; /* 增加卡片间距 */
+    padding: 0 15px; /* 增加网格内边距 */
   }
 }
 
