@@ -405,6 +405,7 @@ onUnmounted(() => {
     padding: 18px 16px;
     margin: 0;
     box-sizing: border-box;
+    border: none !important;
   }
   
   .link-card h3 {
@@ -456,6 +457,7 @@ onUnmounted(() => {
     padding: 16px 14px;
     margin: 0;
     box-sizing: border-box;
+    border: none !important;
   }
   
   .link-card h3 {
@@ -507,6 +509,7 @@ onUnmounted(() => {
     padding: 16px 20px;
     margin: 0;
     box-sizing: border-box;
+    border: none !important;
   }
   
   .link-card h3 {
