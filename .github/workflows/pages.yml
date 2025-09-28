@@ -11,6 +11,7 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
@@ -24,17 +25,42 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package.json
 
+      - name: Cache Vite build
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.vite
+            dist
+          key: ${{ runner.os }}-vite-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vite-
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build project
         run: npm run build
 
-      - name: Save build artifacts
+      - name: Verify build output
         run: |
-          # 将构建文件保存到临时位置
-          mkdir -p /tmp/build-artifacts
-          cp -r dist/* /tmp/build-artifacts/
+          # 验证构建输出
+          if [ ! -d "dist" ]; then
+            echo "❌ dist directory not found"
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ index.html not found in dist"
+            exit 1
+          fi
+          echo "✅ Build verification passed"
+          ls -la dist/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+          retention-days: 1
 
       - name: Checkout Web branch
         uses: actions/checkout@v4
@@ -55,21 +81,34 @@ jobs:
             mv /tmp/CNAME.backup CNAME
           fi
 
-      - name: Copy build files
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: ./
+
+      - name: Process build files
         run: |
-          # 从临时位置恢复构建文件
-          cp -r /tmp/build-artifacts/* .
+          # 添加生成时间注释到index.html
           echo "<!-- Generated on $(date) -->" > index.html.tmp
           cat index.html >> index.html.tmp
           mv index.html.tmp index.html
+          echo "✅ Build files processed successfully"
+          ls -la
 
       - name: Commit and push to Web branch
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git diff --staged --quiet || git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')"
+          if git diff --staged --quiet; then
+            echo "ℹ️ No changes to commit"
+          else
+            git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')"
+            echo "✅ Changes committed"
+          fi
           git push origin Web
+          echo "✅ Changes pushed to Web branch"
 
       - name: Get Current Time
         id: time
@@ -77,7 +116,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -95,9 +134,12 @@ jobs:
             - ✅ 优化的 Vue.js 应用
             - ✅ 响应式设计支持
             - ✅ 移动端适配
+            - ✅ 深色模式支持
+            - ✅ 触摸交互优化
             
             ### 🎯 功能特性
             - **头部导航**: 可配置的 Logo 和品牌标识
+            - **主题切换**: 支持日间/夜间/跟随系统模式
             - **首页介绍**: 自定义标题和副标题
             - **链接模块**: 卡片式布局，支持分页和拖拽
             - **页脚信息**: 版权信息和社交链接
@@ -108,27 +150,25 @@ jobs:
             - Vite 构建工具
             - 响应式 CSS Grid 布局
             - 触控和鼠标交互支持
+            - 移动端触摸优化
             
             ### 📱 设备支持
             - 📱 手机端 (≤480px): 1列布局
             - 📱 平板端 (≤768px): 2列布局  
-            - 💻 笔记本 (≤1024px): 3列布局
-            - 🖥️ 桌面端 (≤1440px): 4列布局
-            - 🖥️ 大屏 (>1440px): 5列布局
+            - 🖥️ 桌面端 (>768px): 4列布局
             
           draft: false
           prerelease: false
 
       - name: Create Release Archive
         run: |
-          # 使用临时保存的构建文件创建压缩包
-          cd /tmp/build-artifacts
-          zip -r /tmp/static-Website-v${{ github.run_number }}.zip .
-          cd /tmp
-          mv static-website-v${{ github.run_number }}.zip ./
+          # 创建发布压缩包
+          zip -r static-website-v${{ github.run_number }}.zip .
+          echo "✅ Release archive created"
+          ls -la static-website-v${{ github.run_number }}.zip
 
       - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
