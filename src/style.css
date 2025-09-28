@@ -166,23 +166,23 @@ footer.site-footer a:hover {
   .link-card p { font-size: 13px; }
   .links-dots .dot { width: 12px; height: 4px; }
   .links-dots .dot.active { width: 18px; }
-  .links-viewport { padding: 10px 0 0; }
-  .grid { gap: 16px; }
-  .links-dots { margin-top: 10px; margin-bottom: 12px; }
+  .links-viewport { padding: 5px 0 0; }
+  .grid { gap: 12px; }
+  .links-dots { margin-top: 6px; margin-bottom: 8px; }
   
   /* 平板竖屏布局优化 */
   .site-intro {
-    padding: 20px 0 10px;
-    margin-top: -200px;
+    padding: 15px 0 5px;
+    margin-top: -250px;
   }
   
   .site-links {
-    padding: 10px 0;
-    margin-top: -300px;
+    padding: 5px 0;
+    margin-top: -350px;
   }
   
   .site-footer {
-    padding: 20px 0 15px;
+    padding: 15px 0 10px;
     margin-top: auto;
   }
 }
