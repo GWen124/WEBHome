@@ -4,6 +4,7 @@
       <div class="links-viewport" ref="viewport" 
            @pointerdown="handlePointerDown" @pointermove="handlePointerMove" @pointerup="handlePointerUp" @pointercancel="handlePointerUp" 
            @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave"
+           @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
            @wheel="handleWheel">
                <div class="links-track" :style="{ transform: `translateX(calc(-${page*100}% + ${dx}px))` }">
                  <div class="grid" v-for="(group, gi) in paged" :key="gi" :style="{ gridTemplateColumns: `repeat(${currentColumns}, 1fr)` }">
@@ -82,7 +83,7 @@ function startDrag(e: MouseEvent | PointerEvent) {
   
   e.preventDefault();
   dragging.value = true;
-  startX.value = e.clientX;
+  startX.value = e.clientX || (e as TouchEvent).touches?.[0]?.clientX || 0;
   
   if (viewport.value) {
     if (e instanceof PointerEvent) {
@@ -96,7 +97,8 @@ function startDrag(e: MouseEvent | PointerEvent) {
 function handleDrag(e: MouseEvent | PointerEvent) {
   if (!dragging.value) return;
   e.preventDefault();
-  dx.value = e.clientX - startX.value;
+  const currentX = e.clientX || (e as TouchEvent).touches?.[0]?.clientX || 0;
+  dx.value = currentX - startX.value;
   
   // 如果移动距离很小，不显示拖拽效果
   if (Math.abs(dx.value) < 5) {
@@ -112,7 +114,7 @@ function endDrag() {
     viewport.value.style.cursor = 'grab';
   }
   
-  // 根据拖拽距离决定翻页阈值（鼠标10px，触控80px）
+  // 根据拖拽距离决定翻页阈值（鼠标10px，触控30px）
   const threshold = 10;
   
   if (Math.abs(dx.value) > threshold) {
@@ -154,6 +156,19 @@ function handleMouseLeave() {
   if (dragging.value) {
     endDrag();
   }
+}
+
+// 触摸事件处理器
+function handleTouchStart(e: TouchEvent) {
+  startDrag(e);
+}
+
+function handleTouchMove(e: TouchEvent) {
+  handleDrag(e);
+}
+
+function handleTouchEnd(e: TouchEvent) {
+  endDrag();
 }
 
 // 触控板/鼠标滚轮横向滑动（macOS 触控板支持）

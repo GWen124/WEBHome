@@ -8,13 +8,14 @@
         <strong>{{ headerText }}</strong>
       </div>
       <div class="theme-switcher">
-        <div class="theme-dropdown" @mouseenter="openDropdown" @mouseleave="closeDropdown">
+        <div class="theme-dropdown" @mouseenter="openDropdown" @mouseleave="closeDropdown" @touchstart="toggleDropdown">
           <!-- 中心扩散效果 -->
           <div class="theme-menu-container" :class="{ 'expanded': isDropdownOpen }">
             <button
               v-for="(mode, index) in themeModes"
               :key="mode.value"
               @click="selectTheme(mode.value)"
+              @touchstart.stop
               class="theme-menu-item"
               :class="{ 'is-active': themeMode === mode.value }"
               :title="mode.label"
@@ -95,6 +96,13 @@ const closeDropdown = () => {
   setTimeout(() => {
     isDropdownOpen.value = false;
   }, 50);
+};
+
+// 移动端切换下拉菜单
+const toggleDropdown = (e: TouchEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  isDropdownOpen.value = !isDropdownOpen.value;
 };
 
 // 选择主题
