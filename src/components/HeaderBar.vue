@@ -470,6 +470,23 @@ onUnmounted(() => {
   .mobile-only {
     display: none !important;
   }
+  
+  /* pad端横屏深色模式按钮样式 */
+  :global(.dark) .theme-menu-item {
+    background: #1f2937 !important;
+    border: none !important;
+    color: #9ca3af !important;
+  }
+  
+  :global(.dark) .theme-menu-item:hover {
+    background: #374151 !important;
+    color: #f3f4f6 !important;
+  }
+  
+  :global(.dark) .theme-menu-item.is-active {
+    background: transparent !important;
+    color: #f3f4f6 !important;
+  }
 }
 
 @media (min-width: 1025px) {
