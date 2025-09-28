@@ -6,21 +6,21 @@
            @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave"
            @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
            @wheel="handleWheel">
-        <div class="links-track" :style="{ transform: `translateX(calc(-${page*100}% + ${dx}px))` }">
-          <div class="grid" v-for="(group, gi) in paged" :key="gi" :style="{ gridTemplateColumns: `repeat(${currentColumns}, 1fr)` }">
+               <div class="links-track" :style="{ transform: `translateX(calc(-${page*100}% + ${dx}px))` }">
+                 <div class="grid" v-for="(group, gi) in paged" :key="gi" :style="{ gridTemplateColumns: `repeat(${currentColumns}, 1fr)` }">
             <a v-for="item in group" :key="item.name" class="link-card" :href="item.link" target="_blank" rel="noopener">
-              <Icon size="35">
-                <component :is="iconMap[item.icon] || Link" />
-              </Icon>
-              <h3>{{ item.name }}</h3>
-              <p>{{ item.description }}</p>
+          <Icon size="35">
+            <component :is="iconMap[item.icon] || Link" />
+          </Icon>
+          <h3>{{ item.name }}</h3>
+          <p>{{ item.description }}</p>
             </a>
           </div>
         </div>
       </div>
-      <div class="links-dots">
-        <div class="dot" v-for="i in totalPages" :key="i" :class="{ active: i-1===page }" @click="go(i-1)"></div>
-      </div>
+             <div class="links-dots">
+               <div class="dot" v-for="i in totalPages" :key="i" :class="{ active: i-1===page }" @click="go(i-1)"></div>
+             </div>
     </div>
   </section>
 </template>
@@ -63,7 +63,7 @@ const paged = computed(() => {
 });
 const totalPages = computed(()=> paged.value.length);
 
-// 动态计算列数 - 固定4列方案（参考 MyHome1.0）
+// 动态计算列数 - 固定4列方案
 const windowWidth = ref(window.innerWidth);
 const currentColumns = computed(() => {
   const width = windowWidth.value;
@@ -93,20 +93,10 @@ function startDrag(e: MouseEvent | PointerEvent) {
     return;
   }
   
-  // 如果点击的是卡片链接，在移动端也允许拖拽
-  if ((e.target as HTMLElement).closest('.link-card')) {
-    // 在移动端，允许卡片区域拖拽翻页
-    if (e instanceof PointerEvent || e.type.includes('touch')) {
-      e.preventDefault();
-      dragging.value = true;
-      startX.value = e.clientX;
-      
-      if (viewport.value) {
-        viewport.value.setPointerCapture(e.pointerId);
-      }
-      return;
-    }
-    // 在桌面端，点击卡片直接跳转，不拖拽
+  // 如果点击的是卡片链接，在手机端也允许拖拽
+  const isCard = (e.target as HTMLElement).closest('.link-card');
+  if (isCard && e instanceof MouseEvent) {
+    // 桌面端点击卡片链接时，不阻止默认行为
     return;
   }
   
@@ -142,8 +132,8 @@ function endDrag() {
     viewport.value.style.cursor = 'grab';
   }
   
-  // 根据拖拽距离决定翻页阈值（鼠标10px，触控80px）
-  const threshold = 10;
+  // 根据拖拽距离决定翻页阈值（鼠标10px，触控50px）
+  const threshold = 50; // 手机端使用更大的阈值
   
   if (Math.abs(dx.value) > threshold) {
     if (dx.value < 0 && page.value < totalPages.value - 1) {
@@ -190,39 +180,40 @@ function handleMouseLeave() {
 function handleTouchStart(e: TouchEvent) {
   if (e.touches.length === 1) {
     const touch = e.touches[0];
-    const mouseEvent = new MouseEvent('mousedown', {
+    const syntheticEvent = new PointerEvent('pointerdown', {
       clientX: touch.clientX,
       clientY: touch.clientY,
-      bubbles: true,
-      cancelable: true
+      pointerId: touch.identifier,
+      pointerType: 'touch'
     });
-    handleMouseDown(mouseEvent);
+    handlePointerDown(syntheticEvent);
   }
 }
 
 function handleTouchMove(e: TouchEvent) {
-  if (e.touches.length === 1) {
+  if (e.touches.length === 1 && dragging.value) {
+    e.preventDefault(); // 防止页面滚动
     const touch = e.touches[0];
-    const mouseEvent = new MouseEvent('mousemove', {
+    const syntheticEvent = new PointerEvent('pointermove', {
       clientX: touch.clientX,
       clientY: touch.clientY,
-      bubbles: true,
-      cancelable: true
+      pointerId: touch.identifier,
+      pointerType: 'touch'
     });
-    handleMouseMove(mouseEvent);
+    handlePointerMove(syntheticEvent);
   }
 }
 
 function handleTouchEnd(e: TouchEvent) {
   if (e.changedTouches.length === 1) {
     const touch = e.changedTouches[0];
-    const mouseEvent = new MouseEvent('mouseup', {
+    const syntheticEvent = new PointerEvent('pointerup', {
       clientX: touch.clientX,
       clientY: touch.clientY,
-      bubbles: true,
-      cancelable: true
+      pointerId: touch.identifier,
+      pointerType: 'touch'
     });
-    handleMouseUp(mouseEvent);
+    handlePointerUp(syntheticEvent);
   }
 }
 
@@ -285,72 +276,30 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 链接区域样式 - 参考 MyHome1.0 */
-.links-viewport { 
-  overflow-x: hidden; 
-  overflow-y: hidden; 
-  width: 100%; 
-  padding: 20px 0 0; 
-  cursor: grab; 
-  user-select: none; 
-  padding-bottom: 0px; 
-}
-
-.links-viewport:active { 
-  cursor: grabbing; 
-}
-
-.links-track { 
-  display: grid; 
-  grid-auto-flow: column; 
-  grid-auto-columns: 100%; 
-  transition: transform 0.35s ease; 
-}
-
-.grid { 
-  display: grid; 
-  gap: 20px; 
-  width: 100%; 
-}
-
-.grid .link-card { 
-  width: 85%; 
-  height: 120px; 
-}
-
-.links-dots { 
-  display: flex; 
-  justify-content: center; 
-  gap: 10px; 
-  margin-top: 15px; 
-  margin-bottom: 80px; 
-  position: relative; 
-  z-index: 10; 
-}
-
-.links-dots .dot { 
+.links-viewport { overflow-x: hidden; overflow-y: hidden; width:100%; cursor: grab; user-select: none; padding-bottom: 0px; }
+.links-viewport:active { cursor: grabbing; }
+.links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .35s ease; }
+.grid { display: grid; gap: 20px; width:100%; justify-items: center; }
+.grid .link-card { width: 85%; height: 120px; }
+.links-dots{ display:flex; justify-content:center; gap:10px; margin-top: 15px; margin-bottom: 80px; position: relative; z-index: 10; }
+.links-dots .dot{ 
   width: 15px; 
   height: 5px; 
   border-radius: 2.5px; 
   background: var(--text-muted); 
-  transition: background 0.25s ease, width 0.25s ease, transform 0.2s ease; 
+  transition: background .25s ease, width .25s ease, transform .2s ease; 
   cursor: pointer; 
 }
-
-.links-dots .dot:hover { 
+.links-dots .dot:hover{ 
   transform: scale(1.5); 
 }
-
-.links-dots .dot.active { 
+.links-dots .dot.active{ 
   background: var(--text-color); 
   width: 20px; 
 }
-
-.links-dots .dot.active:hover { 
+.links-dots .dot.active:hover{ 
   transform: scale(1.5); 
 }
-
-/* 链接卡片样式 - 参考 MyHome1.0 */
 .link-card { 
   background: var(--card-bg); 
   border: 1px solid var(--card-border); 
@@ -364,32 +313,63 @@ onUnmounted(() => {
   box-shadow: var(--shadow); 
   text-decoration: none; 
   color: var(--text-color); 
-  transition: border-color 0.2s ease, background-color 0.2s ease; 
+  transition: all .3s ease; 
   cursor: pointer; 
+  transform: translateY(0);
 }
-
 .link-card:hover { 
   border-color: var(--text-muted); 
   background: var(--bg-color); 
+  transform: translateY(-8px);
 }
-
 .link-card h3 { 
   margin: 8px 0 6px; 
   font-size: 18px; 
   font-weight: 700; 
   color: var(--text-color);
 }
-
 .link-card p { 
   margin: 0; 
   color: var(--text-muted); 
   font-size: 14px; 
 }
-
-/* 响应式断点将由JavaScript动态计算，这里设置默认样式 */
-.grid { 
-  grid-template-columns: repeat(4, 1fr); 
+/* 手机端触摸优化 */
+@media (max-width: 768px) {
+  .links-viewport {
+    touch-action: pan-x; /* 只允许水平滑动 */
+    -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
+  }
+  
+  .link-card {
+    touch-action: manipulation; /* 优化触摸响应 */
+    -webkit-tap-highlight-color: transparent; /* 移除点击高亮 */
+  }
+  
+  .links-dots .dot {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 20px; /* 增大触摸区域 */
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .links-dots .dot::before {
+    content: '';
+    width: 12px;
+    height: 4px;
+    border-radius: 2px;
+    background: inherit;
+    transition: all 0.25s ease;
+  }
+  
+  .links-dots .dot.active::before {
+    width: 16px;
+  }
 }
+
+/* 响应式断点由JavaScript动态计算 */
 </style>
 
 

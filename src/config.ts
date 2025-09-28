@@ -1,4 +1,9 @@
 export const SITE_CONFIG = {
+  // ==================== 主题配置 ====================
+  // 当前使用的主题：MyHome, 未来可扩展更多主题
+  // 主题切换通过运行时进行，不需要环境变量配置
+  THEME: 'MyHome',
+  
   // ==================== 页面标题 ====================
   // 浏览器标签页显示的标题
   PAGE_TITLE: 'Wen｜主页',
@@ -53,6 +58,11 @@ export const SITE_CONFIG = {
   // 支持格式：woff2, woff, ttf, otf
   // 示例：'HeaderFont' 会加载 fonts/HeaderFont.woff2 等文件
   // 留空则使用 GLOBAL_FONT 或系统默认字体
+  // 
+  // 优先级规则：
+  // 1. 专用字体优先级 > 全局字体优先级
+  // 2. 页脚字体特殊规则：FOOTER_LINKS_FONT 留空时采用 FOOTER_COPYRIGHT_FONT
+  // 3. 如果 FOOTER_LINKS_FONT 和 FOOTER_COPYRIGHT_FONT 都设置，FOOTER_LINKS_FONT 优先
   
   // Logo标识字体
   HEADER_FONT: 'brand',
@@ -64,12 +74,14 @@ export const SITE_CONFIG = {
   FOOTER_SITE_FONT: '',
   
   // ==================== 页脚专用字体配置 ====================
-  // 页脚链接文字字体：GW124.TOP 和 Wen 可点击链接文字（优先级最高）
+  // 页脚链接文字字体：GW124.TOP 和 Wen 可点击链接文字
+  // 特殊规则：留空时采用 FOOTER_COPYRIGHT_FONT 的字体
+  // 如果两个都设置不同字体，FOOTER_LINKS_FONT 优先
   FOOTER_LINKS_FONT: '',
   // 页脚版权信息字体：© 2025 GW124.TOP · Powered by Wen 整体文字
   FOOTER_COPYRIGHT_FONT: 'brand',
   // 页脚社交模块字体：社交链接图标和文字
-  FOOTER_SOCIAL_FONT: ''
+  FOOTER_SOCIAL_FONT: 'brand'
 
 } as const;
 

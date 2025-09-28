@@ -1,0 +1,328 @@
+/* MyHome 主题样式 */
+
+/* 字体配置 - 由config.ts控制 */
+
+/* 备用字体定义 */
+@font-face {
+  font-family: 'brand';
+  src: url('/fonts/brand.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* 基础样式重置 */
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+  overflow-x: hidden; 
+  overflow-y: auto; /* 允许垂直滚动 */
+  min-width: 320px; 
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body { 
+  font-family: var(--global-font); 
+  color: var(--text-color); 
+}
+
+/* 容器样式 */
+.container { 
+  padding: 0 24px; 
+}
+
+/* 头部样式 */
+header.site-header { 
+  padding: 16px 0; 
+}
+
+header.site-header .container { 
+  display: flex; 
+  align-items: center; 
+}
+
+header.site-header strong { 
+  font-weight: 700; 
+  font-size: 18px; 
+  margin-left: 100px; 
+}
+
+/* 介绍区域样式 */
+.site-intro { 
+  padding: 0; 
+  text-align: center; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 0; 
+}
+
+.site-intro h1 { 
+  font-size: 64px; 
+  font-weight: 800; 
+  margin: 0 0 12px; 
+  color: var(--text-color); 
+  font-family: var(--intro-title-font);
+}
+
+.site-intro p { 
+  font-size: 20px; 
+  color: var(--text-muted); 
+  margin: 0; 
+  font-family: var(--intro-subtitle-font);
+}
+
+/* 链接区域样式 */
+.site-links { 
+  padding: 0; 
+  position: relative; 
+  z-index: 100; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  min-height: 0; 
+}
+
+.links-viewport { 
+  overflow-x: hidden; 
+  overflow-y: hidden; 
+  width: 100%; 
+  padding: 20px 0 0; 
+  cursor: grab; 
+  user-select: none; 
+  padding-bottom: 0px; 
+}
+
+.links-viewport:active { 
+  cursor: grabbing; 
+}
+
+.links-track { 
+  display: grid; 
+  grid-auto-flow: column; 
+  grid-auto-columns: 100%; 
+  transition: transform 0.35s ease; 
+}
+
+/* 响应式网格布局 - 由LinksBlock.vue控制 */
+
+.links-dots { 
+  display: flex; 
+  justify-content: center; 
+  gap: 10px; 
+  margin-top: 15px; 
+  margin-bottom: 80px; 
+  position: relative; 
+  z-index: 10; 
+}
+
+.links-dots .dot { 
+  width: 15px; 
+  height: 5px; 
+  border-radius: 2.5px; 
+  background: var(--text-muted); 
+  transition: background 0.25s ease, width 0.25s ease, transform 0.2s ease; 
+  cursor: pointer; 
+}
+
+.links-dots .dot:hover { 
+  transform: scale(1.5); 
+}
+
+.links-dots .dot.active { 
+  background: var(--text-color); 
+  width: 20px; 
+}
+
+.links-dots .dot.active:hover { 
+  transform: scale(1.5); 
+}
+
+/* 链接卡片样式 */
+.link-card { 
+  background: var(--card-bg); 
+  border: 1px solid var(--card-border); 
+  border-radius: 16px; 
+  padding: 24px 20px; 
+  text-align: center; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  box-shadow: var(--shadow); 
+  text-decoration: none; 
+  color: var(--text-color); 
+  transition: border-color 0.2s ease, background-color 0.2s ease; 
+  cursor: pointer; 
+}
+
+.link-card:hover { 
+  border-color: var(--text-muted); 
+  background: var(--bg-color); 
+}
+
+.link-card h3 { 
+  margin: 8px 0 6px; 
+  font-size: 18px; 
+  font-weight: 700; 
+  color: var(--text-color);
+}
+
+.link-card p { 
+  margin: 0; 
+  color: var(--text-muted); 
+  font-size: 14px; 
+}
+
+/* 布局样式 */
+#app { 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 100vh; /* 改为最小高度，允许内容超出时滚动 */
+  overflow-x: hidden; 
+  overflow-y: auto; /* 允许垂直滚动 */
+}
+
+.site-main { 
+  flex: 1 0 auto; 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 0; 
+}
+
+.site-footer { 
+  text-align: center; 
+  color: var(--text-muted); 
+  padding: 24px 0 20px; 
+  margin-top: auto; 
+  flex-shrink: 0; 
+  position: sticky; 
+  bottom: 0; 
+  z-index: 1000;
+}
+
+.site-footer > .container { 
+  font-size: 15px; 
+}
+
+footer.site-footer::before { 
+  content: ""; 
+  display: block; 
+  width: 70%; 
+  height: 1px; 
+  margin: 0 auto 12px; 
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, var(--border-color) 12%, var(--border-color) 88%, rgba(0,0,0,0) 100%);
+} 
+
+/* 页脚链接样式 */
+footer.site-footer a,
+footer.site-footer a:link,
+footer.site-footer a:visited { 
+  color: inherit; 
+  text-decoration: none; 
+  font-weight: 500; 
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: center 100%;
+  background-size: 0% 2px;
+  transition: background-size 0.3s ease-out;
+}
+
+footer.site-footer a:hover { 
+  text-decoration: none; 
+  background-size: 100% 2px; 
+}
+
+/* 社交链接样式 */
+.footer-social { 
+  margin-top: 14px; 
+  display: flex; 
+  justify-content: center; 
+  gap: 30px; 
+  flex-wrap: wrap; 
+  color: var(--text-color); 
+}
+
+.footer-social a { 
+  color: inherit; 
+  text-decoration: none; 
+  font-weight: 500; 
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: center 100%;
+  background-size: 0% 2px;
+  transition: background-size 0.3s ease-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-social a:hover { 
+  background-size: 100% 2px; 
+}
+
+.footer-social .icon { 
+  font-size: 16px; 
+  line-height: 1; 
+  display: inline-flex; 
+  align-items: center; 
+}
+
+/* 响应式设计 */
+/* 手机端优化 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px; /* 减少手机端内边距 */
+  }
+  
+  .site-intro h1 {
+    font-size: 48px; /* 手机端减小标题字体 */
+  }
+  
+  .site-intro p {
+    font-size: 18px; /* 手机端减小副标题字体 */
+  }
+  
+  .site-links {
+    padding: 20px 0; /* 增加手机端链接区域内边距 */
+  }
+  
+  .links-viewport {
+    padding: 20px 0 0;
+  }
+  
+  .link-card {
+    width: 90%; /* 手机端卡片稍微宽一些 */
+    height: 100px; /* 手机端卡片高度减小 */
+    padding: 16px 12px; /* 减少手机端卡片内边距 */
+  }
+  
+  .link-card h3 {
+    font-size: 16px; /* 手机端卡片标题字体 */
+    margin: 6px 0 4px;
+  }
+  
+  .link-card p {
+    font-size: 13px; /* 手机端卡片描述字体 */
+  }
+  
+  .links-dots {
+    margin-top: 20px;
+    margin-bottom: 40px; /* 减少手机端底部间距 */
+  }
+  
+  .links-dots .dot {
+    width: 12px;
+    height: 4px;
+  }
+  
+  .links-dots .dot.active {
+    width: 16px;
+  }
+}
+
+/* 响应式布局由LinksBlock.vue的JavaScript控制，这里只保留必要的样式 */
