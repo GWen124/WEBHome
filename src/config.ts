@@ -55,7 +55,7 @@ export const SITE_CONFIG = {
   // 留空则使用 GLOBAL_FONT 或系统默认字体
   
   // Logo标识字体
-  HEADER_FONT: 'brand',
+  HEADER_FONT: '',
   // 首页主标题字体
   INTRO_TITLE_FONT: 'brand',
   // 首页副标题字体
@@ -69,7 +69,7 @@ export const SITE_CONFIG = {
   // 页脚版权信息字体：© 2025 GW124.TOP · Powered by Wen 整体文字
   FOOTER_COPYRIGHT_FONT: 'brand',
   // 页脚社交模块字体：社交链接图标和文字
-  FOOTER_SOCIAL_FONT: ''
+  FOOTER_SOCIAL_FONT: 'brand'
 
 } as const;
 

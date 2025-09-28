@@ -193,6 +193,11 @@ footer.site-footer a:hover {
   header.site-header {
     padding: 12px 0;
   }
+  
+  /* 减少footer与links模块间距 */
+  .site-footer {
+    margin-top: -200px;
+  }
 }
 
 /* 确保Footer在所有情况下都固定在底部 */
