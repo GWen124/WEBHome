@@ -131,6 +131,45 @@ function setSpecificFontToGlobal(target: string) {
   }
 }
 
+// 禁用右键菜单和选中
+document.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+});
+
+// 禁用选择文本
+document.addEventListener('selectstart', (e) => {
+  e.preventDefault();
+});
+
+// 禁用拖拽
+document.addEventListener('dragstart', (e) => {
+  e.preventDefault();
+});
+
+// 禁用F12、Ctrl+Shift+I等开发者工具快捷键
+document.addEventListener('keydown', (e) => {
+  // 禁用F12
+  if (e.key === 'F12') {
+    e.preventDefault();
+  }
+  // 禁用Ctrl+Shift+I (开发者工具)
+  if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+    e.preventDefault();
+  }
+  // 禁用Ctrl+Shift+J (控制台)
+  if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+    e.preventDefault();
+  }
+  // 禁用Ctrl+U (查看源代码)
+  if (e.ctrlKey && e.key === 'u') {
+    e.preventDefault();
+  }
+  // 禁用Ctrl+S (保存页面)
+  if (e.ctrlKey && e.key === 's') {
+    e.preventDefault();
+  }
+});
+
 createApp(App).mount('#app');
 
 
