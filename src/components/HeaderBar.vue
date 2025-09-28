@@ -263,20 +263,27 @@ onUnmounted(() => {
   width: 120px;
 }
 
+/* 暗色主题按钮样式 */
+:global(.dark) .theme-menu-item {
+  background: #1f2937 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .theme-menu-item {
   position: absolute;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  background: #ffffff;
+  border: none;
   border-radius: 8px;
   padding: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-color);
+  color: #6b7280;
   width: 36px;
   height: 36px;
-  box-shadow: var(--shadow);
+  box-shadow: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transition-delay: var(--delay, 0s);
   opacity: 0;
@@ -325,16 +332,31 @@ onUnmounted(() => {
 }
 
 .theme-menu-item:hover {
-  background: var(--bg-color);
-  color: var(--text-color);
-  border-color: var(--border-color);
+  background: #f3f4f6;
+  color: #374151;
 }
 
 .theme-menu-item.is-active {
   background: transparent;
-  color: var(--text-color);
+  color: #374151;
   border: none;
 }
+
+:global(.dark) .theme-menu-item {
+  color: #9ca3af !important;
+}
+
+:global(.dark) .theme-menu-item:hover {
+  background: #374151 !important;
+  color: #f3f4f6 !important;
+}
+
+:global(.dark) .theme-menu-item.is-active {
+  background: transparent !important;
+  color: #f3f4f6 !important;
+  border: none !important;
+  opacity: 1 !important;
+  transform: scale(1) translateY(0) !important;
 }
 
 /* 暗色主题样式 */
@@ -354,29 +376,41 @@ onUnmounted(() => {
 }
 
 .mobile-theme-btn {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-color);
+  color: #6b7280;
   width: 36px;
   height: 36px;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-theme-btn:hover {
-  background: var(--bg-color);
-  color: var(--text-color);
-  border-color: var(--border-color);
+  background: #f9fafb;
+  color: #374151;
+  border-color: #d1d5db;
 }
 
 .mobile-theme-btn:active {
   transform: scale(0.95);
+}
+
+:global(.dark) .mobile-theme-btn {
+  background: #1f2937;
+  border-color: #374151;
+  color: #9ca3af;
+}
+
+:global(.dark) .mobile-theme-btn:hover {
+  background: #374151;
+  color: #f3f4f6;
+  border-color: #4b5563;
 }
 
 /* 响应式显示控制 */
