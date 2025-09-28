@@ -114,14 +114,18 @@ jobs:
         id: time
         run: echo "time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
 
+      - name: Create Release Archive
+        run: |
+          # 创建发布压缩包
+          zip -r static-website-v${{ github.run_number }}.zip .
+          echo "✅ Release archive created"
+          ls -la static-website-v${{ github.run_number }}.zip
+
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.run_number }}
-          release_name: WebHome v${{ github.run_number }}
+          name: WebHome v${{ github.run_number }}
           body: |
             ## WebHome
             
@@ -156,23 +160,8 @@ jobs:
             - 📱 手机端 (≤480px): 1列布局
             - 📱 平板端 (≤768px): 2列布局  
             - 🖥️ 桌面端 (>768px): 4列布局
-            
+          files: static-website-v${{ github.run_number }}.zip
           draft: false
           prerelease: false
-
-      - name: Create Release Archive
-        run: |
-          # 创建发布压缩包
-          zip -r static-website-v${{ github.run_number }}.zip .
-          echo "✅ Release archive created"
-          ls -la static-website-v${{ github.run_number }}.zip
-
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./static-website-v${{ github.run_number }}.zip
-          asset_name: static-website-v${{ github.run_number }}.zip
-          asset_content_type: application/zip
