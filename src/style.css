@@ -178,13 +178,18 @@ footer.site-footer a:hover {
   .footer-social { margin-top: 5px; gap: 20px; }
   .footer-social .icon { font-size: 14px; }
   
-  /* 减少手机端留白 */
+  /* 进一步减少手机端留白 */
   .site-intro {
-    padding: 20px 0 10px;
+    padding: 10px 0 5px;
   }
   
   .site-links {
-    padding: 10px 0;
+    padding: 5px 0;
+  }
+  
+  /* 减少header下方留白 */
+  header.site-header {
+    padding: 12px 0;
   }
 }
 

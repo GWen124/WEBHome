@@ -415,7 +415,7 @@ onUnmounted(() => {
   .links-viewport {
     touch-action: pan-x pan-y;
     -webkit-overflow-scrolling: touch;
-    padding: 8px 0;
+    padding: 4px 0;
   }
   
   .grid {
