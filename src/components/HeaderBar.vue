@@ -414,7 +414,7 @@ onUnmounted(() => {
 }
 
 /* 响应式显示控制 */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .desktop-only {
     display: none !important;
   }
@@ -422,9 +422,57 @@ onUnmounted(() => {
   .mobile-only {
     display: block !important;
   }
+  
+  /* 手机端深色模式按钮样式 */
+  :global(.dark) .mobile-theme-btn {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f3f4f6 !important;
+  }
+  
+  :global(.dark) .mobile-theme-btn:hover {
+    background: #374151 !important;
+    color: #ffffff !important;
+    border-color: #4b5563 !important;
+  }
 }
 
-@media (min-width: 769px) {
+/* pad端竖屏使用移动端主题切换 */
+@media (max-width: 768px) and (min-width: 481px) and (orientation: portrait) {
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .mobile-only {
+    display: block !important;
+  }
+  
+  /* pad端竖屏深色模式按钮样式 */
+  :global(.dark) .mobile-theme-btn {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f3f4f6 !important;
+  }
+  
+  :global(.dark) .mobile-theme-btn:hover {
+    background: #374151 !important;
+    color: #ffffff !important;
+    border-color: #4b5563 !important;
+  }
+}
+
+/* pad端横屏使用桌面端主题切换 */
+@media (max-width: 1024px) and (min-width: 769px) and (orientation: landscape) {
+  .desktop-only {
+    display: block !important;
+  }
+  
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1025px) {
   .desktop-only {
     display: block !important;
   }
