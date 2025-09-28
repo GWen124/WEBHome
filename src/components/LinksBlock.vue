@@ -365,6 +365,15 @@ onUnmounted(() => {
   border-color: var(--text-muted); 
   background: var(--bg-color); 
 }
+
+/* 桌面版悬浮效果 */
+@media (min-width: 769px) {
+  .link-card:hover { 
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), var(--shadow);
+    transition: all 0.3s ease;
+  }
+}
 .link-card h3 { 
   margin: 8px 0 6px; 
   font-size: 18px; 
