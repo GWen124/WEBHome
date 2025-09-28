@@ -68,7 +68,7 @@ header.site-header .container { display:flex; align-items:center; }
 header.site-header strong { font-weight:700; font-size:18px; margin-left:100px; }
 
 /* Intro */
-.site-intro { padding:20px 0; text-align:center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 0; }
+.site-intro { padding:0; text-align:center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 0; }
 .site-intro h1 { font-size:64px; font-weight:800; margin:0 0 12px; color: var(--text-color); }
 .site-intro p { font-size:20px; color: var(--text-muted); margin:0; }
 
@@ -156,25 +156,6 @@ footer.site-footer a:hover {
 
 /* 平板竖屏 (481px - 768px) */
 @media (max-width: 768px) and (min-width: 481px) and (orientation: portrait) {
-  /* 确保视口正确 */
-  html, body {
-    overflow: auto !important;
-    height: auto !important;
-    min-height: 100vh !important;
-  }
-  
-  #app {
-    height: auto !important;
-    min-height: 100vh !important;
-  }
-  
-  .site-main {
-    height: auto !important;
-    min-height: 100vh !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  
   .site-intro h1 { font-size: 42px; }
   .site-intro p { font-size: 15px; }
   .grid .link-card { width: 100%; height: 110px; }
@@ -185,45 +166,23 @@ footer.site-footer a:hover {
   
   /* 平板竖屏布局优化 */
   .site-intro {
-    padding: 10px 0 8px;
-    margin-top: -50px;
+    padding: 30px 0 20px;
+    margin-top: -200px;
   }
   
   .site-links {
-    padding: 15px 0;
-    margin-top: -150px;
+    padding: 20px 0;
+    margin-top: -300px;
   }
   
   .site-footer {
-    padding: 15px 0 10px;
+    padding: 20px 0 15px;
     margin-top: auto;
   }
 }
 
 /* 平板横屏 (481px - 1024px) */
 @media (max-width: 1024px) and (min-width: 769px) and (orientation: landscape) {
-  /* 确保视口正确 */
-  html, body {
-    overflow: auto !important;
-    height: auto !important;
-    min-height: 100vh !important;
-    max-height: 100vh !important;
-  }
-  
-  #app {
-    height: auto !important;
-    min-height: 100vh !important;
-    max-height: 100vh !important;
-    overflow: auto !important;
-  }
-  
-  .site-main {
-    height: auto !important;
-    min-height: 100vh !important;
-    max-height: 100vh !important;
-    overflow: auto !important;
-  }
-  
   .site-intro h1 { font-size: 36px; }
   .site-intro p { font-size: 14px; }
   .grid .link-card { width: 100%; height: 100px; }
@@ -234,8 +193,8 @@ footer.site-footer a:hover {
   
   /* 平板横屏布局优化 */
   .site-intro {
-    padding: 12px 0 10px;
-    margin-top: -50px;
+    padding: 20px 0 15px;
+    margin-top: -100px;
   }
   
   .site-links {
@@ -251,25 +210,6 @@ footer.site-footer a:hover {
 
 /* 手机 (≤480px) */
 @media (max-width: 480px) {
-  /* 确保视口正确 */
-  html, body {
-    overflow: auto !important;
-    height: auto !important;
-    min-height: 100vh !important;
-  }
-  
-  #app {
-    height: auto !important;
-    min-height: 100vh !important;
-  }
-  
-  .site-main {
-    height: auto !important;
-    min-height: 100vh !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  
   .site-intro h1 { font-size: 28px; }
   .site-intro p { font-size: 13px; }
   .grid .link-card { width: 100%; height: 100px; }
@@ -283,18 +223,13 @@ footer.site-footer a:hover {
   
   /* 进一步减少手机端留白 */
   .site-intro {
-    padding: 8px 0 5px;
-    margin-top: -100px;
+    padding: 10px 0 5px;
+    margin-top: -200px;
   }
   
   .site-links {
     padding: 5px 0;
-    margin-top: -150px;
-  }
-  
-  .site-footer {
-    padding: 20px 0 15px;
-    margin-top: auto;
+    margin-top: -200px;
   }
   
   /* 减少header下方留白 */
