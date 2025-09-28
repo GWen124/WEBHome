@@ -281,6 +281,7 @@ footer.site-footer a:hover {
   
   .site-intro h1 {
     font-size: 48px; /* 手机端减小标题字体 */
+    margin: 0 0 8px; /* 减少标题底部间距 */
   }
   
   .site-intro p {
@@ -288,7 +289,7 @@ footer.site-footer a:hover {
   }
   
   .site-links {
-    padding: 20px 0; /* 增加手机端链接区域内边距 */
+    padding: 20px 0 10px; /* 增加手机端链接区域内边距，减少底部间距 */
     justify-content: flex-start; /* 手机端改为顶部对齐 */
   }
   
@@ -313,7 +314,7 @@ footer.site-footer a:hover {
   
   .links-dots {
     margin-top: 20px;
-    margin-bottom: 40px; /* 减少手机端底部间距 */
+    margin-bottom: 20px; /* 进一步减少手机端底部间距 */
   }
   
   .links-dots .dot {
@@ -323,6 +324,20 @@ footer.site-footer a:hover {
   
   .links-dots .dot.active {
     width: 16px;
+  }
+  
+  /* 手机端footer位置优化 */
+  .site-footer {
+    padding: 16px 0 12px; /* 减少手机端footer内边距 */
+  }
+  
+  .footer-social {
+    margin-top: 10px; /* 减少社交模块上边距 */
+    gap: 20px; /* 减少社交链接间距 */
+  }
+  
+  .footer-social a {
+    font-size: 14px; /* 稍微减小社交链接字体 */
   }
 }
 

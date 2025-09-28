@@ -93,10 +93,9 @@ function startDrag(e: MouseEvent | PointerEvent) {
     return;
   }
   
-  // 如果点击的是卡片链接，在手机端也允许拖拽
+  // 如果点击的是卡片链接，不阻止默认行为，让链接可以正常点击
   const isCard = (e.target as HTMLElement).closest('.link-card');
-  if (isCard && e instanceof MouseEvent) {
-    // 桌面端点击卡片链接时，不阻止默认行为
+  if (isCard) {
     return;
   }
   
@@ -178,6 +177,12 @@ function handleMouseLeave() {
 
 // 触摸事件处理器
 function handleTouchStart(e: TouchEvent) {
+  // 如果触摸的是卡片链接，不处理拖拽，让链接可以正常点击
+  const isCard = (e.target as HTMLElement).closest('.link-card');
+  if (isCard) {
+    return;
+  }
+  
   if (e.touches.length === 1) {
     const touch = e.touches[0];
     const syntheticEvent = new PointerEvent('pointerdown', {
@@ -343,6 +348,7 @@ onUnmounted(() => {
   .link-card {
     touch-action: manipulation; /* 优化触摸响应 */
     -webkit-tap-highlight-color: transparent; /* 移除点击高亮 */
+    pointer-events: auto; /* 确保卡片可以接收点击事件 */
   }
   
   .links-dots .dot {

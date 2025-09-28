@@ -10,7 +10,7 @@
           v-for="(mode, index) in themeModes"
           :key="mode.value"
           @click="selectTheme(mode.value)"
-          @touchstart.stop
+          @touchstart="handleButtonTouch"
           class="theme-menu-item"
           :class="{ 'is-active': themeMode === mode.value }"
           :title="mode.label"
@@ -57,8 +57,14 @@ const closeDropdown = () => {
 
 // 手机端触摸事件处理
 const handleTouchStart = (e: TouchEvent) => {
-  e.preventDefault();
+  // 不阻止默认行为，让点击事件正常工作
   isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+// 按钮触摸事件处理
+const handleButtonTouch = (e: TouchEvent) => {
+  // 阻止事件冒泡，避免触发父级的触摸事件
+  e.stopPropagation();
 };
 
 // 点击外部关闭菜单
