@@ -366,7 +366,6 @@ onUnmounted(() => {
   .link-card:hover { 
     transform: translateY(-4px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    border-color: var(--text-muted); 
     background: var(--bg-color); 
   }
   
