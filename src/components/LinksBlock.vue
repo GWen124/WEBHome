@@ -43,13 +43,18 @@ const viewport = ref<HTMLElement | null>(null);
 // 响应式每页卡片数量
 const updatePageSize = () => {
   const width = window.innerWidth;
+  const height = window.innerHeight;
+  const isLandscape = width > height;
   
   if (width <= 480) {
     // 手机端：1列3行 = 3个卡片
     pageSize.value = 3;
   } else if (width <= 768) {
-    // 平板端：2列2行 = 4个卡片
+    // 平板竖屏：2列2行 = 4个卡片
     pageSize.value = 4;
+  } else if (width <= 1024 && isLandscape) {
+    // 平板横屏：3列2行 = 6个卡片
+    pageSize.value = 6;
   } else {
     // 桌面端：3列2行 = 6个卡片
     pageSize.value = 6;
@@ -81,11 +86,15 @@ const totalPages = computed(()=> paged.value.length);
 // 响应式列数计算
 const currentColumns = computed(() => {
   const width = window.innerWidth;
+  const height = window.innerHeight;
+  const isLandscape = width > height;
   
   if (width <= 480) {
     return 1; // 手机端：1列
   } else if (width <= 768) {
-    return 2; // 平板端：2列
+    return 2; // 平板竖屏：2列
+  } else if (width <= 1024 && isLandscape) {
+    return 3; // 平板横屏：3列
   } else {
     return 3; // 桌面端：3列
   }
@@ -374,8 +383,59 @@ onUnmounted(() => {
   align-items: center;
 }
 
-/* 平板端布局 - 2列2行 */
-@media (max-width: 768px) and (min-width: 481px) {
+/* 平板竖屏布局 - 2列2行 */
+@media (max-width: 768px) and (min-width: 481px) and (orientation: portrait) {
+  .links-viewport {
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+    padding: 15px 0;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    padding: 0 20px;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  
+  .link-card {
+    width: 100% !important;
+    min-height: 110px;
+    padding: 18px 16px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .link-card h3 {
+    font-size: 16px !important;
+    margin: 8px 0 6px !important;
+    line-height: 1.2;
+  }
+  
+  .link-card p {
+    font-size: 13px !important;
+    line-height: 1.3;
+    margin: 0;
+  }
+  
+  .links-dots {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+  
+  .links-dots .dot {
+    width: 12px !important;
+    height: 4px !important;
+  }
+  
+  .links-dots .dot.active {
+    width: 18px !important;
+  }
+}
+
+/* 平板横屏布局 - 3列2行 */
+@media (max-width: 1024px) and (min-width: 769px) and (orientation: landscape) {
   .links-viewport {
     touch-action: pan-x pan-y;
     -webkit-overflow-scrolling: touch;
@@ -383,15 +443,17 @@ onUnmounted(() => {
   }
   
   .grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
-    padding: 0 12px;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 18px !important;
+    padding: 0 30px;
+    max-width: 95%;
+    margin: 0 auto;
   }
   
   .link-card {
     width: 100% !important;
     min-height: 100px;
-    padding: 16px 12px;
+    padding: 16px 14px;
     margin: 0;
     box-sizing: border-box;
   }
@@ -415,7 +477,7 @@ onUnmounted(() => {
   
   .links-dots .dot {
     width: 10px !important;
-    height: 4px !important;
+    height: 3px !important;
   }
   
   .links-dots .dot.active {
