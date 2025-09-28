@@ -422,7 +422,7 @@ onUnmounted(() => {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
     padding: 0;
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto;
   }
   
