@@ -9,6 +9,7 @@ on:
       - 'package.json'
       - 'vite.config.ts'
       - 'tsconfig.json'
+      - '.github/workflows/**'
   workflow_dispatch:
     inputs:
       environment:
