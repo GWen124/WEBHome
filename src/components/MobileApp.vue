@@ -30,23 +30,44 @@
 
         <!-- 链接网格 -->
         <section class="mobile-links-section">
-          <div class="mobile-links-grid">
-            <a 
-              v-for="item in links" 
-              :key="item.name" 
-              :href="item.link" 
-              target="_blank" 
-              rel="noopener"
-              class="mobile-link-card"
-            >
-              <div class="icon">
-                <Icon size="28">
-                  <component :is="iconMap[item.icon] || Link" />
-                </Icon>
+          <div class="mobile-links-viewport" 
+               @touchstart="handleTouchStart" 
+               @touchmove="handleTouchMove" 
+               @touchend="handleTouchEnd"
+               @mousedown="handleMouseDown" 
+               @mousemove="handleMouseMove" 
+               @mouseup="handleMouseUp">
+            <div class="mobile-links-track" :style="{ transform: `translateX(calc(-${currentPage * 100}%))` }">
+              <div class="mobile-links-grid" v-for="(page, pageIndex) in paginatedLinks" :key="pageIndex">
+                <a 
+                  v-for="item in page" 
+                  :key="item.name" 
+                  :href="item.link" 
+                  target="_blank" 
+                  rel="noopener"
+                  class="mobile-link-card"
+                >
+                  <div class="icon">
+                    <Icon size="28">
+                      <component :is="iconMap[item.icon] || Link" />
+                    </Icon>
+                  </div>
+                  <h3>{{ item.name }}</h3>
+                  <p>{{ item.description }}</p>
+                </a>
               </div>
-              <h3>{{ item.name }}</h3>
-              <p>{{ item.description }}</p>
-            </a>
+            </div>
+          </div>
+          
+          <!-- 分页指示器 -->
+          <div class="mobile-pagination" v-if="totalPages > 1">
+            <div 
+              v-for="page in totalPages" 
+              :key="page" 
+              class="mobile-pagination-dot"
+              :class="{ active: page - 1 === currentPage }"
+              @click="goToPage(page - 1)"
+            ></div>
           </div>
         </section>
       </div>
@@ -101,6 +122,13 @@ const links = ref<LinkItem[]>([]);
 const socials = ref<Social[]>([]);
 const currentTheme = ref<'light' | 'dark' | 'auto'>('auto');
 
+// 翻页相关
+const currentPage = ref(0);
+const itemsPerPage = 4; // 每页显示4个卡片
+const dragging = ref(false);
+const startX = ref(0);
+const currentX = ref(0);
+
 // 主题图标映射
 const themeIcons = {
   light: Sun,
@@ -149,6 +177,17 @@ const copyrightYear = computed(() => {
   return `${foundedYear}-${currentYear}`;
 });
 
+// 分页计算
+const paginatedLinks = computed(() => {
+  const pages: LinkItem[][] = [];
+  for (let i = 0; i < links.value.length; i += itemsPerPage) {
+    pages.push(links.value.slice(i, i + itemsPerPage));
+  }
+  return pages;
+});
+
+const totalPages = computed(() => paginatedLinks.value.length);
+
 // 方法
 const goHome = () => {
   if (window.location.hash) {
@@ -165,6 +204,78 @@ const toggleTheme = () => {
   
   currentTheme.value = nextTheme;
   themeManager.switchMode(nextTheme);
+};
+
+// 翻页方法
+const goToPage = (page: number) => {
+  if (page >= 0 && page < totalPages.value) {
+    currentPage.value = page;
+  }
+};
+
+// 触摸事件处理
+const handleTouchStart = (e: TouchEvent) => {
+  if (e.touches.length === 1) {
+    dragging.value = true;
+    startX.value = e.touches[0].clientX;
+    currentX.value = e.touches[0].clientX;
+  }
+};
+
+const handleTouchMove = (e: TouchEvent) => {
+  if (dragging.value && e.touches.length === 1) {
+    e.preventDefault();
+    currentX.value = e.touches[0].clientX;
+  }
+};
+
+const handleTouchEnd = (e: TouchEvent) => {
+  if (dragging.value) {
+    const deltaX = currentX.value - startX.value;
+    const threshold = 50;
+    
+    if (Math.abs(deltaX) > threshold) {
+      if (deltaX > 0 && currentPage.value > 0) {
+        // 向右滑动，上一页
+        currentPage.value--;
+      } else if (deltaX < 0 && currentPage.value < totalPages.value - 1) {
+        // 向左滑动，下一页
+        currentPage.value++;
+      }
+    }
+    
+    dragging.value = false;
+  }
+};
+
+// 鼠标事件处理（用于桌面端测试）
+const handleMouseDown = (e: MouseEvent) => {
+  dragging.value = true;
+  startX.value = e.clientX;
+  currentX.value = e.clientX;
+};
+
+const handleMouseMove = (e: MouseEvent) => {
+  if (dragging.value) {
+    currentX.value = e.clientX;
+  }
+};
+
+const handleMouseUp = () => {
+  if (dragging.value) {
+    const deltaX = currentX.value - startX.value;
+    const threshold = 50;
+    
+    if (Math.abs(deltaX) > threshold) {
+      if (deltaX > 0 && currentPage.value > 0) {
+        currentPage.value--;
+      } else if (deltaX < 0 && currentPage.value < totalPages.value - 1) {
+        currentPage.value++;
+      }
+    }
+    
+    dragging.value = false;
+  }
 };
 
 // 生命周期
@@ -281,11 +392,59 @@ onMounted(async () => {
   margin: 0 auto;
 }
 
+.mobile-links-section {
+  margin-bottom: 30px;
+}
+
+.mobile-links-viewport {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-links-track {
+  display: flex;
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
 .mobile-links-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  padding: 0 0 30px;
+  padding: 0 20px;
+  min-width: 100%;
+  flex-shrink: 0;
+}
+
+.mobile-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.mobile-pagination-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.mobile-pagination-dot.active {
+  background: var(--text-color);
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.mobile-pagination-dot:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
 }
 
 .mobile-link-card {
@@ -410,12 +569,14 @@ onMounted(async () => {
   animation: mobileCardSlideIn 0.4s ease-out;
 }
 
-.mobile-link-card:nth-child(1) { animation-delay: 0.1s; }
-.mobile-link-card:nth-child(2) { animation-delay: 0.2s; }
-.mobile-link-card:nth-child(3) { animation-delay: 0.3s; }
-.mobile-link-card:nth-child(4) { animation-delay: 0.4s; }
-.mobile-link-card:nth-child(5) { animation-delay: 0.5s; }
-.mobile-link-card:nth-child(6) { animation-delay: 0.6s; }
+.mobile-links-grid:nth-child(1) .mobile-link-card:nth-child(1) { animation-delay: 0.1s; }
+.mobile-links-grid:nth-child(1) .mobile-link-card:nth-child(2) { animation-delay: 0.2s; }
+.mobile-links-grid:nth-child(1) .mobile-link-card:nth-child(3) { animation-delay: 0.3s; }
+.mobile-links-grid:nth-child(1) .mobile-link-card:nth-child(4) { animation-delay: 0.4s; }
+.mobile-links-grid:nth-child(2) .mobile-link-card:nth-child(1) { animation-delay: 0.1s; }
+.mobile-links-grid:nth-child(2) .mobile-link-card:nth-child(2) { animation-delay: 0.2s; }
+.mobile-links-grid:nth-child(2) .mobile-link-card:nth-child(3) { animation-delay: 0.3s; }
+.mobile-links-grid:nth-child(2) .mobile-link-card:nth-child(4) { animation-delay: 0.4s; }
 
 @keyframes mobileCardSlideIn {
   from {
