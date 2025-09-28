@@ -83,7 +83,7 @@ function startDrag(e: MouseEvent | PointerEvent) {
   
   e.preventDefault();
   dragging.value = true;
-  startX.value = e.clientX || (e as TouchEvent).touches?.[0]?.clientX || 0;
+  startX.value = e.clientX;
   
   if (viewport.value) {
     if (e instanceof PointerEvent) {
@@ -94,11 +94,51 @@ function startDrag(e: MouseEvent | PointerEvent) {
   }
 }
 
+// 移动端触摸处理
+function handleTouchStart(e: TouchEvent) {
+  // 如果点击的是卡片链接或分页点，不阻止默认行为
+  if ((e.target as HTMLElement).closest('.link-card') || 
+      (e.target as HTMLElement).closest('.links-dots')) {
+    return;
+  }
+  
+  e.preventDefault();
+  dragging.value = true;
+  startX.value = e.touches[0].clientX;
+}
+
+function handleTouchMove(e: TouchEvent) {
+  if (!dragging.value) return;
+  e.preventDefault();
+  dx.value = e.touches[0].clientX - startX.value;
+  
+  // 如果移动距离很小，不显示拖拽效果
+  if (Math.abs(dx.value) < 5) {
+    dx.value = 0;
+  }
+}
+
+function handleTouchEnd() {
+  if (!dragging.value) return;
+  dragging.value = false;
+  
+  // 移动端触摸阈值更高
+  const threshold = 50;
+  
+  if (Math.abs(dx.value) > threshold) {
+    if (dx.value < 0 && page.value < totalPages.value - 1) {
+      page.value++;
+    } else if (dx.value > 0 && page.value > 0) {
+      page.value--;
+    }
+  }
+  dx.value = 0;
+}
+
 function handleDrag(e: MouseEvent | PointerEvent) {
   if (!dragging.value) return;
   e.preventDefault();
-  const currentX = e.clientX || (e as TouchEvent).touches?.[0]?.clientX || 0;
-  dx.value = currentX - startX.value;
+  dx.value = e.clientX - startX.value;
   
   // 如果移动距离很小，不显示拖拽效果
   if (Math.abs(dx.value) < 5) {
@@ -114,7 +154,7 @@ function endDrag() {
     viewport.value.style.cursor = 'grab';
   }
   
-  // 根据拖拽距离决定翻页阈值（鼠标10px，触控30px）
+  // 根据拖拽距离决定翻页阈值（鼠标10px，触控80px）
   const threshold = 10;
   
   if (Math.abs(dx.value) > threshold) {
@@ -156,19 +196,6 @@ function handleMouseLeave() {
   if (dragging.value) {
     endDrag();
   }
-}
-
-// 触摸事件处理器
-function handleTouchStart(e: TouchEvent) {
-  startDrag(e);
-}
-
-function handleTouchMove(e: TouchEvent) {
-  handleDrag(e);
-}
-
-function handleTouchEnd(e: TouchEvent) {
-  endDrag();
 }
 
 // 触控板/鼠标滚轮横向滑动（macOS 触控板支持）
@@ -282,6 +309,34 @@ onUnmounted(() => {
   grid-template-columns: repeat(3, 1fr); 
   justify-items: center;
   align-items: center;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .links-viewport {
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .link-card {
+    width: 100% !important;
+    min-height: 100px;
+    padding: 16px 12px;
+  }
+  
+  .link-card h3 {
+    font-size: 14px !important;
+    margin: 6px 0 4px !important;
+  }
+  
+  .link-card p {
+    font-size: 11px !important;
+  }
+  
+  .links-dots {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }
 </style>
 

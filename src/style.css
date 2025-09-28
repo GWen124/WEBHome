@@ -41,12 +41,20 @@ html, body {
   height:100%; 
   margin:0; 
   padding:0; 
-  overflow-x: hidden; 
-  overflow-y: auto;
+  overflow:hidden; 
   min-width: 320px; 
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 移动端允许滚动 */
+@media (max-width: 768px) {
+  html, body { 
+    overflow: auto;
+    height: auto;
+    min-height: 100vh;
+  }
 }
 
 body { 
@@ -74,8 +82,8 @@ header.site-header strong { font-weight:700; font-size:18px; margin-left:100px; 
 .links-dots .dot.active:hover{ transform: scale(1.5); }
 
 /* Layout */
-#app { display:flex; flex-direction:column; min-height:100vh; }
-.site-main { flex:1 0 auto; display: flex; flex-direction: column; }
+#app { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+.site-main { flex:1 0 auto; display: flex; flex-direction: column; min-height: 0; }
 .site-footer { text-align:center; color: var(--text-muted); padding: 24px 0 5px; margin-top:auto; flex-shrink: 0; position: sticky; bottom: 0; }
 /* 仅缩小 Footer 文字信息区域字号，不影响社交模块 */
 .site-footer > .container { font-size:15px; }
@@ -161,7 +169,7 @@ footer.site-footer a:hover {
 @media (max-width: 480px) {
   .site-intro h1 { font-size: 32px; }
   .site-intro p { font-size: 14px; }
-  .grid .link-card { width: 100%; height: 100px; padding: 16px 12px; }
+  .grid .link-card { width: 100%; height: 100px; }
   .link-card h3 { font-size: 15px; }
   .link-card p { font-size: 12px; }
   .links-dots .dot { width: 10px; height: 3px; }
@@ -169,8 +177,6 @@ footer.site-footer a:hover {
   .site-footer > .container { font-size: 13px; }
   .footer-social { margin-top: 5px; gap: 20px; }
   .footer-social .icon { font-size: 14px; }
-  .container { padding: 0 16px; }
-  .grid { gap: 12px; }
 }
 
 /* 确保Footer在所有情况下都固定在底部 */
