@@ -4,22 +4,23 @@
       <div class="links-viewport" ref="viewport" 
            @pointerdown="handlePointerDown" @pointermove="handlePointerMove" @pointerup="handlePointerUp" @pointercancel="handlePointerUp" 
            @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave"
+           @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
            @wheel="handleWheel">
-               <div class="links-track" :style="{ transform: `translateX(calc(-${page*100}% + ${dx}px))` }">
-                 <div class="grid" v-for="(group, gi) in paged" :key="gi" :style="{ gridTemplateColumns: `repeat(${currentColumns}, 1fr)` }">
+        <div class="links-track" :style="{ transform: `translateX(calc(-${page*100}% + ${dx}px))` }">
+          <div class="grid" v-for="(group, gi) in paged" :key="gi" :style="{ gridTemplateColumns: `repeat(${currentColumns}, 1fr)` }">
             <a v-for="item in group" :key="item.name" class="link-card" :href="item.link" target="_blank" rel="noopener">
-          <Icon size="35">
-            <component :is="iconMap[item.icon] || Link" />
-          </Icon>
-          <h3>{{ item.name }}</h3>
-          <p>{{ item.description }}</p>
+              <Icon size="35">
+                <component :is="iconMap[item.icon] || Link" />
+              </Icon>
+              <h3>{{ item.name }}</h3>
+              <p>{{ item.description }}</p>
             </a>
           </div>
         </div>
       </div>
-             <div class="links-dots">
-               <div class="dot" v-for="i in totalPages" :key="i" :class="{ active: i-1===page }" @click="go(i-1)"></div>
-             </div>
+      <div class="links-dots">
+        <div class="dot" v-for="i in totalPages" :key="i" :class="{ active: i-1===page }" @click="go(i-1)"></div>
+      </div>
     </div>
   </section>
 </template>
@@ -62,7 +63,7 @@ const paged = computed(() => {
 });
 const totalPages = computed(()=> paged.value.length);
 
-// 动态计算列数 - 固定4列方案
+// 动态计算列数 - 固定4列方案（参考 MyHome1.0）
 const windowWidth = ref(window.innerWidth);
 const currentColumns = computed(() => {
   const width = windowWidth.value;
@@ -87,9 +88,25 @@ const currentColumns = computed(() => {
 
 // 统一的拖拽处理逻辑
 function startDrag(e: MouseEvent | PointerEvent) {
-  // 如果点击的是卡片链接或分页点，不阻止默认行为
-  if ((e.target as HTMLElement).closest('.link-card') || 
-      (e.target as HTMLElement).closest('.links-dots')) {
+  // 如果点击的是分页点，不阻止默认行为
+  if ((e.target as HTMLElement).closest('.links-dots')) {
+    return;
+  }
+  
+  // 如果点击的是卡片链接，在移动端也允许拖拽
+  if ((e.target as HTMLElement).closest('.link-card')) {
+    // 在移动端，允许卡片区域拖拽翻页
+    if (e instanceof PointerEvent || e.type.includes('touch')) {
+      e.preventDefault();
+      dragging.value = true;
+      startX.value = e.clientX;
+      
+      if (viewport.value) {
+        viewport.value.setPointerCapture(e.pointerId);
+      }
+      return;
+    }
+    // 在桌面端，点击卡片直接跳转，不拖拽
     return;
   }
   
@@ -169,6 +186,46 @@ function handleMouseLeave() {
   }
 }
 
+// 触摸事件处理器
+function handleTouchStart(e: TouchEvent) {
+  if (e.touches.length === 1) {
+    const touch = e.touches[0];
+    const mouseEvent = new MouseEvent('mousedown', {
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+      bubbles: true,
+      cancelable: true
+    });
+    handleMouseDown(mouseEvent);
+  }
+}
+
+function handleTouchMove(e: TouchEvent) {
+  if (e.touches.length === 1) {
+    const touch = e.touches[0];
+    const mouseEvent = new MouseEvent('mousemove', {
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+      bubbles: true,
+      cancelable: true
+    });
+    handleMouseMove(mouseEvent);
+  }
+}
+
+function handleTouchEnd(e: TouchEvent) {
+  if (e.changedTouches.length === 1) {
+    const touch = e.changedTouches[0];
+    const mouseEvent = new MouseEvent('mouseup', {
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+      bubbles: true,
+      cancelable: true
+    });
+    handleMouseUp(mouseEvent);
+  }
+}
+
 // 触控板/鼠标滚轮横向滑动（macOS 触控板支持）
 let lastWheelTime = 0;
 const wheelCooldown = 300; // 300ms冷却时间，确保只能一页一页翻
@@ -228,30 +285,72 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.links-viewport { overflow-x: hidden; overflow-y: hidden; width:100%; cursor: grab; user-select: none; padding-bottom: 0px; }
-.links-viewport:active { cursor: grabbing; }
-.links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .35s ease; }
-.grid { display: grid; gap: 20px; width:100%; justify-items: center; }
-.grid .link-card { width: 85%; height: 120px; }
-.links-dots{ display:flex; justify-content:center; gap:10px; margin-top: 15px; margin-bottom: 80px; position: relative; z-index: 10; }
-.links-dots .dot{ 
+/* 链接区域样式 - 参考 MyHome1.0 */
+.links-viewport { 
+  overflow-x: hidden; 
+  overflow-y: hidden; 
+  width: 100%; 
+  padding: 20px 0 0; 
+  cursor: grab; 
+  user-select: none; 
+  padding-bottom: 0px; 
+}
+
+.links-viewport:active { 
+  cursor: grabbing; 
+}
+
+.links-track { 
+  display: grid; 
+  grid-auto-flow: column; 
+  grid-auto-columns: 100%; 
+  transition: transform 0.35s ease; 
+}
+
+.grid { 
+  display: grid; 
+  gap: 20px; 
+  width: 100%; 
+}
+
+.grid .link-card { 
+  width: 85%; 
+  height: 120px; 
+}
+
+.links-dots { 
+  display: flex; 
+  justify-content: center; 
+  gap: 10px; 
+  margin-top: 15px; 
+  margin-bottom: 80px; 
+  position: relative; 
+  z-index: 10; 
+}
+
+.links-dots .dot { 
   width: 15px; 
   height: 5px; 
   border-radius: 2.5px; 
   background: var(--text-muted); 
-  transition: background .25s ease, width .25s ease, transform .2s ease; 
+  transition: background 0.25s ease, width 0.25s ease, transform 0.2s ease; 
   cursor: pointer; 
 }
-.links-dots .dot:hover{ 
+
+.links-dots .dot:hover { 
   transform: scale(1.5); 
 }
-.links-dots .dot.active{ 
+
+.links-dots .dot.active { 
   background: var(--text-color); 
   width: 20px; 
 }
-.links-dots .dot.active:hover{ 
+
+.links-dots .dot.active:hover { 
   transform: scale(1.5); 
 }
+
+/* 链接卡片样式 - 参考 MyHome1.0 */
 .link-card { 
   background: var(--card-bg); 
   border: 1px solid var(--card-border); 
@@ -265,27 +364,32 @@ onUnmounted(() => {
   box-shadow: var(--shadow); 
   text-decoration: none; 
   color: var(--text-color); 
-  transition: all .3s ease; 
+  transition: border-color 0.2s ease, background-color 0.2s ease; 
   cursor: pointer; 
-  transform: translateY(0);
 }
+
 .link-card:hover { 
   border-color: var(--text-muted); 
   background: var(--bg-color); 
-  transform: translateY(-8px);
 }
+
 .link-card h3 { 
   margin: 8px 0 6px; 
   font-size: 18px; 
   font-weight: 700; 
   color: var(--text-color);
 }
+
 .link-card p { 
   margin: 0; 
   color: var(--text-muted); 
   font-size: 14px; 
 }
-/* 响应式断点由JavaScript动态计算 */
+
+/* 响应式断点将由JavaScript动态计算，这里设置默认样式 */
+.grid { 
+  grid-template-columns: repeat(4, 1fr); 
+}
 </style>
 
 

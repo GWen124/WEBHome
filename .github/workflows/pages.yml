@@ -22,24 +22,20 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: package.json
+          cache-dependency-path: app/package.json
 
       - name: Install dependencies
+        working-directory: app
         run: npm ci
 
       - name: Build project
+        working-directory: app
         run: npm run build
 
-      - name: Save build artifacts
-        run: |
-          # 将构建文件保存到临时位置
-          mkdir -p /tmp/build-artifacts
-          cp -r dist/* /tmp/build-artifacts/
-
-      - name: Checkout Web branch
+      - name: Checkout web branch
         uses: actions/checkout@v4
         with:
-          ref: Web
+          ref: web
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clean web branch (preserve CNAME)
@@ -57,19 +53,18 @@ jobs:
 
       - name: Copy build files
         run: |
-          # 从临时位置恢复构建文件
-          cp -r /tmp/build-artifacts/* .
+          cp -r app/dist/* .
           echo "<!-- Generated on $(date) -->" > index.html.tmp
           cat index.html >> index.html.tmp
           mv index.html.tmp index.html
 
-      - name: Commit and push to Web branch
+      - name: Commit and push to web branch
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
           git diff --staged --quiet || git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')"
-          git push origin Web
+          git push origin web
 
       - name: Get Current Time
         id: time
@@ -121,11 +116,9 @@ jobs:
 
       - name: Create Release Archive
         run: |
-          # 使用临时保存的构建文件创建压缩包
-          cd /tmp/build-artifacts
-          zip -r /tmp/static-Website-v${{ github.run_number }}.zip .
-          cd /tmp
-          mv static-website-v${{ github.run_number }}.zip ./
+          cd app/dist
+          zip -r ../../static-website-v${{ github.run_number }}.zip .
+          cd ../..
 
       - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
