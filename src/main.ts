@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import './style.css';
 import './themes/MyHome/styles.css';
+import './themes/MyHome/mobile.css';
 import { SITE_CONFIG } from './config';
 import { themeManager } from './themes/ThemeManager';
 
