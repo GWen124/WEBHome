@@ -45,8 +45,8 @@ const updatePageSize = () => {
   const width = window.innerWidth;
   
   if (width <= 480) {
-    // 手机端：1列4行 = 4个卡片
-    pageSize.value = 4;
+    // 手机端：1列3行 = 3个卡片
+    pageSize.value = 3;
   } else if (width <= 768) {
     // 平板端：2列2行 = 4个卡片
     pageSize.value = 4;
@@ -410,7 +410,7 @@ onUnmounted(() => {
   }
 }
 
-/* 手机端布局 - 1列4行 */
+/* 手机端布局 - 1列3行，居中80% */
 @media (max-width: 480px) {
   .links-viewport {
     touch-action: pan-x pan-y;
@@ -420,42 +420,44 @@ onUnmounted(() => {
   
   .grid {
     grid-template-columns: 1fr !important;
-    gap: 12px !important;
-    padding: 0 16px;
+    gap: 16px !important;
+    padding: 0;
+    max-width: 80%;
+    margin: 0 auto;
   }
   
   .link-card {
     width: 100% !important;
-    min-height: 80px;
-    padding: 14px 16px;
+    min-height: 90px;
+    padding: 16px 20px;
     margin: 0;
     box-sizing: border-box;
   }
   
   .link-card h3 {
-    font-size: 14px !important;
-    margin: 6px 0 4px !important;
+    font-size: 15px !important;
+    margin: 8px 0 6px !important;
     line-height: 1.2;
   }
   
   .link-card p {
-    font-size: 11px !important;
+    font-size: 12px !important;
     line-height: 1.3;
     margin: 0;
   }
   
   .links-dots {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
   
   .links-dots .dot {
-    width: 8px !important;
-    height: 3px !important;
+    width: 10px !important;
+    height: 4px !important;
   }
   
   .links-dots .dot.active {
-    width: 12px !important;
+    width: 16px !important;
   }
 }
 </style>
