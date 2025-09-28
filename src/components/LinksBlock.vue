@@ -95,35 +95,60 @@ function startDrag(e: MouseEvent | PointerEvent) {
 }
 
 // 移动端触摸处理
+let touchStartX = 0;
+let touchStartY = 0;
+let isTouchDragging = false;
+
 function handleTouchStart(e: TouchEvent) {
+  const target = e.target as HTMLElement;
+  
   // 如果点击的是卡片链接或分页点，不阻止默认行为
-  if ((e.target as HTMLElement).closest('.link-card') || 
-      (e.target as HTMLElement).closest('.links-dots')) {
+  if (target.closest('.link-card') || target.closest('.links-dots')) {
     return;
   }
   
-  e.preventDefault();
-  dragging.value = true;
-  startX.value = e.touches[0].clientX;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  isTouchDragging = false;
+  
+  // 不立即阻止默认行为，让系统判断是否为滚动
+  setTimeout(() => {
+    if (isTouchDragging) {
+      e.preventDefault();
+    }
+  }, 10);
 }
 
 function handleTouchMove(e: TouchEvent) {
-  if (!dragging.value) return;
-  e.preventDefault();
-  dx.value = e.touches[0].clientX - startX.value;
+  if (!e.touches[0]) return;
   
-  // 如果移动距离很小，不显示拖拽效果
-  if (Math.abs(dx.value) < 5) {
-    dx.value = 0;
+  const touchX = e.touches[0].clientX;
+  const touchY = e.touches[0].clientY;
+  const deltaX = Math.abs(touchX - touchStartX);
+  const deltaY = Math.abs(touchY - touchStartY);
+  
+  // 如果水平移动距离大于垂直移动距离，认为是翻页手势
+  if (deltaX > deltaY && deltaX > 10) {
+    isTouchDragging = true;
+    e.preventDefault();
+    
+    if (!dragging.value) {
+      dragging.value = true;
+      startX.value = touchStartX;
+    }
+    
+    dx.value = touchX - startX.value;
   }
 }
 
-function handleTouchEnd() {
-  if (!dragging.value) return;
-  dragging.value = false;
+function handleTouchEnd(e: TouchEvent) {
+  if (!isTouchDragging || !dragging.value) return;
   
-  // 移动端触摸阈值更高
-  const threshold = 50;
+  dragging.value = false;
+  isTouchDragging = false;
+  
+  // 移动端触摸阈值
+  const threshold = 30;
   
   if (Math.abs(dx.value) > threshold) {
     if (dx.value < 0 && page.value < totalPages.value - 1) {
@@ -316,26 +341,46 @@ onUnmounted(() => {
   .links-viewport {
     touch-action: pan-x pan-y;
     -webkit-overflow-scrolling: touch;
+    padding: 10px 0;
+  }
+  
+  .grid {
+    gap: 12px !important;
+    padding: 0 8px;
   }
   
   .link-card {
     width: 100% !important;
-    min-height: 100px;
-    padding: 16px 12px;
+    min-height: 90px;
+    padding: 12px 8px;
+    margin: 0;
+    box-sizing: border-box;
   }
   
   .link-card h3 {
-    font-size: 14px !important;
-    margin: 6px 0 4px !important;
+    font-size: 13px !important;
+    margin: 4px 0 2px !important;
+    line-height: 1.2;
   }
   
   .link-card p {
-    font-size: 11px !important;
+    font-size: 10px !important;
+    line-height: 1.3;
+    margin: 0;
   }
   
   .links-dots {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .links-dots .dot {
+    width: 8px !important;
+    height: 3px !important;
+  }
+  
+  .links-dots .dot.active {
+    width: 12px !important;
   }
 }
 </style>

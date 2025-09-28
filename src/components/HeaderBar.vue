@@ -8,7 +8,7 @@
         <strong>{{ headerText }}</strong>
       </div>
       <div class="theme-switcher">
-        <div class="theme-dropdown" @mouseenter="openDropdown" @mouseleave="closeDropdown" @touchstart="openDropdown" @touchend="closeDropdown">
+        <div class="theme-dropdown" @mouseenter="openDropdown" @mouseleave="closeDropdown" @touchstart="handleTouchStart" @touchend="handleTouchEnd">
           <!-- 中心扩散效果 -->
           <div class="theme-menu-container" :class="{ 'expanded': isDropdownOpen }">
             <button
@@ -95,6 +95,31 @@ const closeDropdown = () => {
   setTimeout(() => {
     isDropdownOpen.value = false;
   }, 50);
+};
+
+// 移动端触摸处理
+const touchStartTime = ref(0);
+const handleTouchStart = (e: TouchEvent) => {
+  e.preventDefault();
+  touchStartTime.value = Date.now();
+  openDropdown();
+};
+
+const handleTouchEnd = (e: TouchEvent) => {
+  e.preventDefault();
+  const touchDuration = Date.now() - touchStartTime.value;
+  
+  // 如果触摸时间很短，立即关闭（避免闪烁）
+  if (touchDuration < 100) {
+    setTimeout(() => {
+      isDropdownOpen.value = false;
+    }, 200);
+  } else {
+    // 长按保持打开状态
+    setTimeout(() => {
+      isDropdownOpen.value = false;
+    }, 1000);
+  }
 };
 
 // 选择主题
