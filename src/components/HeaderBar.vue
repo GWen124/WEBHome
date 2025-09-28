@@ -423,7 +423,7 @@ onUnmounted(() => {
     display: block !important;
   }
   
-  /* 手机端深色模式按钮样式 */
+    /* 手机端深色模式按钮样式 */
   :global(.dark) .mobile-theme-btn {
     background: #1f2937 !important;
     border-color: #374151 !important;
