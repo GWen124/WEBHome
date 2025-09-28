@@ -357,21 +357,29 @@ onUnmounted(() => {
   box-shadow: var(--shadow); 
   text-decoration: none; 
   color: var(--text-color); 
-  transition: border-color .2s ease, background-color .2s ease; 
+  transition: border-color .2s ease, background-color .2s ease, transform .3s ease, box-shadow .3s ease; 
   cursor: pointer; 
 }
 .link-card.is-placeholder { visibility: hidden; pointer-events: none; }
-.link-card:hover { 
-  border-color: var(--text-muted); 
-  background: var(--bg-color); 
-}
-
 /* 桌面版悬浮效果 */
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .link-card:hover { 
     transform: translateY(-4px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
+    border-color: var(--text-muted); 
+    background: var(--bg-color); 
+  }
+  
+  .dark .link-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* 移动端和pad端保持原有悬浮效果 */
+@media (max-width: 1024px) {
+  .link-card:hover { 
+    border-color: var(--text-muted); 
+    background: var(--bg-color); 
   }
 }
 .link-card h3 { 
