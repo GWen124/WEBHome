@@ -18,6 +18,7 @@ import {
   Envelope,
   Github,
   Pushed,
+  ExternalLinkAlt,
 } from '@vicons/fa';
 
 export const siteIcon: Record<string, any> = {
@@ -36,6 +37,7 @@ export const siteIcon: Record<string, any> = {
   Envelope,
   Github,
   Pushed,
+  ExternalLinkAlt,
 };
 
 
