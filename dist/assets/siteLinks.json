@@ -43,7 +43,7 @@
   },
   {
     "icon": "Rocket",
-    "name": "CDN代理链接",
+    "name": "GitHub Proxy",
     "description": "专用于GitHub网页加速，加速网页访问。",
     "link": "https://cdn.gw124.top"
   },
