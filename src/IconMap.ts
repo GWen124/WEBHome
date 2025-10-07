@@ -19,6 +19,7 @@ import {
   Github,
   Pushed,
   ExternalLinkAlt,
+  Markdown,
 } from '@vicons/fa';
 
 export const siteIcon: Record<string, any> = {
@@ -38,6 +39,7 @@ export const siteIcon: Record<string, any> = {
   Github,
   Pushed,
   ExternalLinkAlt,
+  Markdown,
 };
 
 
