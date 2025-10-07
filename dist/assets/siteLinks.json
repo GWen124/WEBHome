@@ -13,9 +13,9 @@
   },
   {
     "icon": "Images",
-    "name": "图床",
-    "description": "免费图片托管服务，支持多种图片格式。",
-    "link": "https://img.gw124.top/"
+    "name": "Image Gallery",
+    "description": "一个用于在线展示和浏览图片的画廊。",
+    "link": "https://gallery.gw124.top/"
   },
   {
     "icon": "Cloud",
@@ -40,6 +40,12 @@
     "name": "Markdown 编辑器",
     "description": "实时编写、预览和导出Markdown文档。",
     "link": "https://md.gw124.top"
+  },
+  {
+    "icon": "Images",
+    "name": "图床",
+    "description": "免费图片托管服务，支持多种图片格式。",
+    "link": "https://img.gw124.top/"
   },
   {
     "icon": "Icons",
