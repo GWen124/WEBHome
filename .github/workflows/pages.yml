@@ -2,7 +2,7 @@ name: 🚀 Deploy WebHome
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
     paths:
       - 'src/**'
       - 'public/**'
