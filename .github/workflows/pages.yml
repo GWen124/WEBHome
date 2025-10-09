@@ -240,7 +240,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ github.run_number }}
-                 name: HomePage v${{ github.run_number }}
+          name: HomePage v${{ github.run_number }}
           body: |
             ## 🏠 HomePage - 个人主页
             
@@ -295,7 +295,7 @@ jobs:
       - name: Create Release Archive
         run: |
           cd ${{ env.BUILD_DIR }}
-                 zip -r ../homepage-v${{ github.run_number }}.zip .
+          zip -r ../homepage-v${{ github.run_number }}.zip .
           cd ..
           echo "Archive created: homepage-v${{ github.run_number }}.zip"
 
