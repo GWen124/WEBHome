@@ -78,6 +78,12 @@
     "link": "https://2fa.gw124.top/"
   },
   {
+    "icon": "Clock",
+    "name": "全球主要城市时间概览",
+    "description": "展示并自动更新全球主要城市时间。",
+    "link": "https://gwen124.github.io/"
+  },
+  {
     "icon": "Book",
     "name": "Txt转Epub",
     "description": "文本转电子书工具。",
