@@ -8,7 +8,7 @@
       <span v-if="cfg.FOOTER_SITE"> · </span>
       <span>
         Powered By 
-        <a href="https://github.com/GWen124/WEBHome" target="_blank" rel="noopener" class="clickable">Wen</a>
+        <a href="https://github.com/GWen124/HomePage" target="_blank" rel="noopener" class="clickable">Wen</a>
       </span>
     </div>
     <SocialLinks v-if="cfg.FOOTER_SOCIAL_ENABLED" />

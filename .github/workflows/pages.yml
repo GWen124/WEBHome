@@ -1,4 +1,4 @@
-name: 🚀 Deploy WebHome
+name: 🚀 Deploy HomePage
 
 on:
   push:
@@ -240,9 +240,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ github.run_number }}
-          name: WebHome v${{ github.run_number }}
+                 name: HomePage v${{ github.run_number }}
           body: |
-            ## 🏠 WebHome - 个人主页
+            ## 🏠 HomePage - 个人主页
             
             **🚀 发布信息**
             - **版本**: v${{ github.run_number }}
@@ -285,9 +285,9 @@ jobs:
             - 🖥️ 大屏 (>1440px): 5列布局
             
             **🔗 相关链接**
-            - [📖 使用文档](https://github.com/GWen124/WEBHome)
-            - [🐛 问题反馈](https://github.com/GWen124/WEBHome/issues)
-            - [💡 功能建议](https://github.com/GWen124/WEBHome/discussions)
+            - [📖 使用文档](https://github.com/GWen124/HomePage)
+            - [🐛 问题反馈](https://github.com/GWen124/HomePage/issues)
+            - [💡 功能建议](https://github.com/GWen124/HomePage/discussions)
             
           draft: false
           prerelease: false
@@ -295,16 +295,16 @@ jobs:
       - name: Create Release Archive
         run: |
           cd ${{ env.BUILD_DIR }}
-          zip -r ../webhome-v${{ github.run_number }}.zip .
+                 zip -r ../homepage-v${{ github.run_number }}.zip .
           cd ..
-          echo "Archive created: webhome-v${{ github.run_number }}.zip"
+          echo "Archive created: homepage-v${{ github.run_number }}.zip"
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: ./webhome-v${{ github.run_number }}.zip
+          files: ./homepage-v${{ github.run_number }}.zip
           tag_name: v${{ github.run_number }}
           prerelease: false
 
