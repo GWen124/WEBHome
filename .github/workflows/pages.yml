@@ -209,12 +209,12 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ github.run_number }}
-          release_name: WebHome v${{ github.run_number }}
+          name: WebHome v${{ github.run_number }}
           body: |
             ## 🏠 WebHome - 个人主页
             
@@ -274,14 +274,13 @@ jobs:
           echo "Archive created: webhome-v${{ github.run_number }}.zip"
 
       - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./webhome-v${{ github.run_number }}.zip
-          asset_name: webhome-v${{ github.run_number }}.zip
-          asset_content_type: application/zip
+          files: ./webhome-v${{ github.run_number }}.zip
+          tag_name: v${{ github.run_number }}
+          prerelease: false
 
   # 部署状态通知
   notify:
