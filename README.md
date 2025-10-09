@@ -126,7 +126,7 @@ FOOTER_SOCIAL_FONT: 'brand'
   {
     "name": "Github",
     "icon": "Github",
-    "url": "https://github.com/GWen124"
+    "url": "https://github.com/GWen124/HomePage"
   }
 ]
 ```
