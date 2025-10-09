@@ -138,7 +138,6 @@ const applyTheme = () => {
   if (themeMode.value === 'auto') {
     // 跟随系统
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    console.log('跟随系统模式，系统是否为深色:', isDark);
     if (isDark) {
       root.classList.add('dark');
       root.classList.remove('light');
@@ -159,7 +158,6 @@ const applyTheme = () => {
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 const handleSystemThemeChange = () => {
   if (themeMode.value === 'auto') {
-    console.log('系统主题变化，当前主题模式:', themeMode.value);
     applyTheme();
   }
 };

@@ -8,11 +8,6 @@ if (SITE_CONFIG.PAGE_TITLE) {
   document.title = SITE_CONFIG.PAGE_TITLE;
 }
 
-// 加载自定义字体
-if (SITE_CONFIG.GLOBAL_FONT && SITE_CONFIG.GLOBAL_FONT.trim() !== '') {
-  loadCustomFont(SITE_CONFIG.GLOBAL_FONT);
-}
-
 // 字体配置
 const FONT_CONFIGS = [
   { name: SITE_CONFIG.HEADER_FONT, target: 'header' },
@@ -22,39 +17,57 @@ const FONT_CONFIGS = [
   { name: SITE_CONFIG.FOOTER_LINKS_FONT, target: 'footer-links' },
   { name: SITE_CONFIG.FOOTER_COPYRIGHT_FONT, target: 'footer-copyright' },
   { name: SITE_CONFIG.FOOTER_SOCIAL_FONT, target: 'footer-social' }
-];
+] as const;
 
-// 加载专用字体
-FONT_CONFIGS.forEach(({ name, target }) => {
-  if (name && name.trim() !== '') {
-    loadSpecificFont(name, target);
-  } else {
-    setSpecificFontToGlobal(target);
+// 初始化字体加载
+async function initializeFonts(): Promise<void> {
+  // 加载全局字体
+  if (SITE_CONFIG.GLOBAL_FONT && SITE_CONFIG.GLOBAL_FONT.trim() !== '') {
+    await loadCustomFont(SITE_CONFIG.GLOBAL_FONT);
   }
-});
+
+  // 加载专用字体
+  const fontPromises = FONT_CONFIGS.map(async ({ name, target }) => {
+    if (name && name.trim() !== '') {
+      await loadSpecificFont(name, target);
+    } else {
+      setSpecificFontToGlobal(target);
+    }
+  });
+
+  await Promise.allSettled(fontPromises);
+}
+
+// 启动字体加载
+initializeFonts();
 
 // 字体加载函数
-function loadCustomFont(fontName: string) {
-  // 创建 @font-face 规则
-  const fontFace = new FontFace(
-    fontName,
-    `url(/fonts/${fontName}.ttf) format('truetype')`
-  );
-  
-  // 加载字体
-  fontFace.load()
-    .then(() => {
-      // 将字体添加到文档中
-      document.fonts.add(fontFace);
-      // 更新 CSS 变量
-      document.documentElement.style.setProperty('--global-font', `"${fontName}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`);
-      
-      // 更新所有使用全局字体的专用字体变量
-      updateSpecificFontsToGlobal();
-    })
-    .catch(() => {
-      // 字体加载失败，使用默认字体
-    });
+async function loadCustomFont(fontName: string): Promise<void> {
+  try {
+    // 创建 @font-face 规则
+    const fontFace = new FontFace(
+      fontName,
+      `url(/fonts/${fontName}.ttf) format('truetype')`
+    );
+    
+    // 加载字体
+    await fontFace.load();
+    
+    // 将字体添加到文档中
+    document.fonts.add(fontFace);
+    
+    // 更新 CSS 变量
+    document.documentElement.style.setProperty(
+      '--global-font', 
+      `"${fontName}", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`
+    );
+    
+    // 更新所有使用全局字体的专用字体变量
+    updateSpecificFontsToGlobal();
+  } catch (error) {
+    // 字体加载失败，使用默认字体
+    console.warn(`Failed to load font: ${fontName}`, error);
+  }
 }
 
 // 更新所有专用字体为全局字体
@@ -67,26 +80,28 @@ function updateSpecificFontsToGlobal() {
 }
 
 // 专用字体加载函数
-function loadSpecificFont(fontName: string, target: string) {
-  // 创建 @font-face 规则
-  const fontFace = new FontFace(
-    fontName,
-    `url(/fonts/${fontName}.ttf) format('truetype')`
-  );
-  
-  // 加载字体
-  fontFace.load()
-    .then(() => {
-      // 将字体添加到文档中
-      document.fonts.add(fontFace);
-      // 更新对应的 CSS 变量，专用字体优先
-      const cssVarName = `--${target}-font`;
-      document.documentElement.style.setProperty(cssVarName, `"${fontName}", var(--global-font)`);
-    })
-    .catch(() => {
-      // 专用字体加载失败时，回退到全局字体
-      setSpecificFontToGlobal(target);
-    });
+async function loadSpecificFont(fontName: string, target: string): Promise<void> {
+  try {
+    // 创建 @font-face 规则
+    const fontFace = new FontFace(
+      fontName,
+      `url(/fonts/${fontName}.ttf) format('truetype')`
+    );
+    
+    // 加载字体
+    await fontFace.load();
+    
+    // 将字体添加到文档中
+    document.fonts.add(fontFace);
+    
+    // 更新对应的 CSS 变量，专用字体优先
+    const cssVarName = `--${target}-font`;
+    document.documentElement.style.setProperty(cssVarName, `"${fontName}", var(--global-font)`);
+  } catch (error) {
+    // 专用字体加载失败时，回退到全局字体
+    console.warn(`Failed to load specific font: ${fontName}`, error);
+    setSpecificFontToGlobal(target);
+  }
 }
 
 // 设置专用字体为全局字体

@@ -24,7 +24,9 @@ import {
   Clock,
 } from '@vicons/fa';
 
-export const siteIcon: Record<string, any> = {
+import type { Component } from 'vue';
+
+export const siteIcon: Record<string, Component> = {
   Link,
   Blog,
   Cloud,

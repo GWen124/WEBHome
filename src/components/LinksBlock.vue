@@ -133,12 +133,14 @@ function startDrag(e: MouseEvent | PointerEvent) {
   }
 }
 
-// 移动端触摸处理
-let touchStartX = 0;
-let touchStartY = 0;
-let isTouchDragging = false;
-let touchStartTime = 0;
-let lastTouchMoveTime = 0;
+// 移动端触摸处理状态
+const touchState = {
+  startX: 0,
+  startY: 0,
+  isDragging: false,
+  startTime: 0,
+  lastMoveTime: 0
+};
 
 function handleTouchStart(e: TouchEvent) {
   const target = e.target as HTMLElement;
@@ -148,10 +150,10 @@ function handleTouchStart(e: TouchEvent) {
     return;
   }
   
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-  touchStartTime = Date.now();
-  isTouchDragging = false;
+  touchState.startX = e.touches[0].clientX;
+  touchState.startY = e.touches[0].clientY;
+  touchState.startTime = Date.now();
+  touchState.isDragging = false;
   
   // 不立即阻止默认行为，让系统判断是否为滚动
 }
@@ -162,23 +164,23 @@ function handleTouchMove(e: TouchEvent) {
   const now = Date.now();
   const touchX = e.touches[0].clientX;
   const touchY = e.touches[0].clientY;
-  const deltaX = Math.abs(touchX - touchStartX);
-  const deltaY = Math.abs(touchY - touchStartY);
+  const deltaX = Math.abs(touchX - touchState.startX);
+  const deltaY = Math.abs(touchY - touchState.startY);
   
   // 节流处理，避免过于频繁的更新
-  if (now - lastTouchMoveTime < 16) { // 60fps
+  if (now - touchState.lastMoveTime < 16) { // 60fps
     return;
   }
-  lastTouchMoveTime = now;
+  touchState.lastMoveTime = now;
   
   // 如果水平移动距离大于垂直移动距离，认为是翻页手势
   if (deltaX > deltaY && deltaX > 12) {
-    isTouchDragging = true;
+    touchState.isDragging = true;
     e.preventDefault();
     
     if (!dragging.value) {
       dragging.value = true;
-      startX.value = touchStartX;
+      startX.value = touchState.startX;
     }
     
     // 使用更平滑的移动计算
@@ -188,16 +190,16 @@ function handleTouchMove(e: TouchEvent) {
 }
 
 function handleTouchEnd(e: TouchEvent) {
-  const touchDuration = Date.now() - touchStartTime;
+  const touchDuration = Date.now() - touchState.startTime;
   
   // 若未进入拖拽状态，保持点击行为（打开链接）
-  if (!isTouchDragging) {
+  if (!touchState.isDragging) {
     return;
   }
   
   if (!dragging.value) return;
   dragging.value = false;
-  isTouchDragging = false;
+  touchState.isDragging = false;
   
   // 根据滑动距离和速度决定是否翻页
   const moveDistance = Math.abs(dx.value);
@@ -270,7 +272,7 @@ function handleCardClick(e: Event, item: LinkItem) {
   }
   
   // 检查是否为快速点击（短时间内的点击）
-  const clickDuration = Date.now() - touchStartTime;
+  const clickDuration = Date.now() - touchState.startTime;
   if (clickDuration < 200 && clickDuration > 0) {
     // 快速点击，允许跳转
     return;
@@ -312,8 +314,10 @@ function handleMouseLeave() {
 }
 
 // 触控板/鼠标滚轮横向滑动（macOS 触控板支持）
-let lastWheelTime = 0;
-const wheelCooldown = 500; // 500ms冷却时间，确保只能一页一页翻
+const wheelState = {
+  lastTime: 0,
+  cooldown: 500 // 500ms冷却时间，确保只能一页一页翻
+};
 
 function handleWheel(e: WheelEvent) {
   // 仅在横向滚动明显时触发，避免与页面纵向滚动冲突
@@ -323,12 +327,12 @@ function handleWheel(e: WheelEvent) {
     const now = Date.now();
     
     // 检查冷却时间，确保只能一页一页翻
-    if (now - lastWheelTime < wheelCooldown) {
+    if (now - wheelState.lastTime < wheelState.cooldown) {
       return;
     }
     
     // 更新最后翻页时间
-    lastWheelTime = now;
+    wheelState.lastTime = now;
     
     // 限制翻页：只能一页一页翻
     if (e.deltaX > 0 && page.value < totalPages.value - 1) {
