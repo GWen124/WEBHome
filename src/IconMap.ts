@@ -21,6 +21,7 @@ import {
   Pushed,
   ExternalLinkAlt,
   Markdown,
+  Clock,
 } from '@vicons/fa';
 
 export const siteIcon: Record<string, any> = {
@@ -42,6 +43,7 @@ export const siteIcon: Record<string, any> = {
   Pushed,
   ExternalLinkAlt,
   Markdown,
+  Clock,
 };
 
 
