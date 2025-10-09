@@ -98,22 +98,23 @@ jobs:
           path: dist/
           retention-days: 1
 
-      - name: Checkout web branch
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.WEB_BRANCH }}
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Create web branch if not exists
+      - name: Setup web branch
         run: |
-          if ! git show-ref --verify --quiet refs/remotes/origin/${{ env.WEB_BRANCH }}; then
+          # 检查 Web 分支是否存在
+          if git show-ref --verify --quiet refs/remotes/origin/${{ env.WEB_BRANCH }}; then
+            echo "Web branch exists, checking it out"
+            git checkout ${{ env.WEB_BRANCH }}
+          else
             echo "Web branch does not exist, creating it from main"
             git checkout -b ${{ env.WEB_BRANCH }}
             git push origin ${{ env.WEB_BRANCH }}
-          else
-            echo "Web branch exists, checking it out"
-            git checkout ${{ env.WEB_BRANCH }}
           fi
 
       - name: Clean web branch
