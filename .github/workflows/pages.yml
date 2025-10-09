@@ -137,6 +137,19 @@ jobs:
           if [ -f /tmp/.nojekyll.backup ]; then
             mv /tmp/.nojekyll.backup .nojekyll
           fi
+          
+          # 如果 CNAME 文件不存在，从 main 分支获取
+          if [ ! -f CNAME ]; then
+            echo "CNAME file not found, fetching from main branch"
+            git fetch origin main:main
+            if [ -f ../main/CNAME ]; then
+              cp ../main/CNAME .
+              echo "CNAME file copied from main branch"
+            else
+              echo "gw124.top" > CNAME
+              echo "CNAME file created with default domain"
+            fi
+          fi
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
