@@ -313,7 +313,7 @@ function handleMouseLeave() {
 
 // 触控板/鼠标滚轮横向滑动（macOS 触控板支持）
 let lastWheelTime = 0;
-const wheelCooldown = 300; // 300ms冷却时间，确保只能一页一页翻
+const wheelCooldown = 500; // 500ms冷却时间，确保只能一页一页翻
 
 function handleWheel(e: WheelEvent) {
   // 仅在横向滚动明显时触发，避免与页面纵向滚动冲突
@@ -365,7 +365,7 @@ onUnmounted(() => {
 <style scoped>
 .links-viewport { overflow-x: hidden; overflow-y: hidden; width:100%; cursor: grab; padding-bottom: 0px; }
 .links-viewport:active { cursor: grabbing; }
-.links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.links-track { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; transition: transform .6s cubic-bezier(0.4, 0, 0.2, 1); }
 .grid { display: grid; gap: 20px; width:100%; }
 .grid .link-card { width: 85%; height: 120px; }
 /* 分页点样式 - 与全局样式保持一致 */
